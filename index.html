@@ -2,556 +2,988 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>静岡共和国 — 観光電子ビザ申請ポータル</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>静岡共和国 電子渡航認証システム — Republic of Shizuoka eVisa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+JP:wght@300;400;500;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+JP:wght@400;500;700&display=swap');
-
-/* ===== RESET & BASE ===== */
+/* =============================================
+   RESET & BASE
+   ============================================= */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html { font-size: 16px; }
-
+html { font-size: 15px; scroll-behavior: smooth; }
 body {
   font-family: 'EB Garamond', 'Noto Serif JP', Georgia, serif;
-  background: #eee8d8;
-  color: #1a1a2e;
+  background: #f0ece0;
+  color: #1c1c2e;
   min-height: 100vh;
   -webkit-text-size-adjust: 100%;
 }
 
-/* ===== HEADER ===== */
-.hdr {
-  background: #0d2240;
-  color: #f0e6c8;
-  text-align: center;
-  padding: 20px 16px 16px;
-  border-bottom: 5px double #c8a84b;
+/* =============================================
+   CSS VARIABLES
+   ============================================= */
+:root {
+  --navy:     #0b1f3a;
+  --navy-mid: #163052;
+  --navy-lt:  #1e4570;
+  --gold:     #b8922a;
+  --gold-lt:  #d4a93a;
+  --gold-pale:#f5e8c0;
+  --cream:    #faf6ed;
+  --parchment:#f0ece0;
+  --ink:      #1c1c2e;
+  --ink-mid:  #3a3a4a;
+  --ink-lt:   #6a6a7a;
+  --border:   #c8b888;
+  --border-dk:#8a7840;
+  --red-warn: #8b1a1a;
+  --green-ok: #1a5c2a;
+  --radius-sm: 1px;
+  --radius:    2px;
 }
-.hdr-inner {
+
+/* =============================================
+   SECURITY BANNER
+   ============================================= */
+.sec-banner {
+  background: var(--navy);
+  color: #8aaac8;
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  padding: 5px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid #1e3a5c;
+}
+.sec-banner .lock { color: #4a8; margin-right: 5px; }
+.sec-banner .right { color: #5a7a9a; font-size: 9px; }
+
+/* =============================================
+   MAIN HEADER
+   ============================================= */
+.main-header {
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+.main-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(184,146,42,.03) 40px,
+      rgba(184,146,42,.03) 41px
+    );
+  pointer-events: none;
+}
+.header-gold-top {
+  height: 4px;
+  background: linear-gradient(to right, #6a4a10, var(--gold-lt), #c8a030, var(--gold-lt), #6a4a10);
+}
+.header-gold-bottom {
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  margin-top: 2px;
+}
+
+.header-body {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px 20px 18px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+  flex-wrap: wrap;
+}
+
+/* Coat of arms */
+.coa-wrap {
+  flex-shrink: 0;
+  text-align: center;
+}
+.coa-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #1e3a5c, #0b1f3a);
+  border: 2px solid var(--gold);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  max-width: 680px;
-  margin: 0 auto;
-  flex-wrap: wrap;
+  font-size: 40px;
+  box-shadow: 0 0 0 1px rgba(184,146,42,.3), 0 4px 20px rgba(0,0,0,.5);
+  position: relative;
 }
-.coat { font-size: 56px; line-height: 1; flex-shrink: 0; }
-.hdr-text { text-align: left; }
-.hdr-title-sub {
-  font-size: clamp(10px, 2.5vw, 13px);
-  letter-spacing: .2em;
-  color: #c8a84b;
-  text-transform: uppercase;
-  margin-bottom: 4px;
+.coa-circle::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  border: 1px solid rgba(184,146,42,.25);
+  pointer-events: none;
 }
-.hdr-title-main {
-  font-size: clamp(16px, 4vw, 22px);
-  font-weight: 600;
-  color: #f0e6c8;
-  line-height: 1.2;
-  margin-bottom: 2px;
-}
-.hdr-title-en {
-  font-size: clamp(12px, 3vw, 15px);
-  letter-spacing: .06em;
-  color: #f0e6c8;
-}
-.hdr-title-portal {
-  font-size: clamp(10px, 2.5vw, 13px);
-  color: #a8b8d0;
-  font-weight: 400;
-  letter-spacing: .04em;
-  margin-top: 2px;
-}
-.hdr-divider {
-  width: 100%;
-  height: 1px;
-  background: linear-gradient(to right, transparent, #c8a84b, transparent);
-  margin: 12px 0;
-  max-width: 680px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.hdr-decree {
-  font-size: clamp(9px, 2vw, 11px);
+.coa-label {
+  font-size: 8px;
   letter-spacing: .12em;
-  color: #8aa0c0;
+  color: #8a9aaa;
   text-transform: uppercase;
+  margin-top: 6px;
 }
 
-/* ===== RIBBON ===== */
-.ribbon {
-  background: #c8a84b;
-  color: #1a1a2e;
-  text-align: center;
-  font-size: clamp(9px, 2.2vw, 11px);
-  font-weight: 700;
-  letter-spacing: .1em;
-  padding: 6px 8px;
-  text-transform: uppercase;
-  line-height: 1.4;
-}
-
-/* ===== PROGRESS BAR ===== */
-.progress {
-  display: flex;
-  background: #0d2240;
-  border-bottom: 2px solid #c8a84b;
-}
-.pr-step {
-  flex: 1;
-  text-align: center;
-  padding: clamp(6px, 2vw, 10px) 2px;
-  font-size: clamp(8px, 2vw, 10px);
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: #8aa0c0;
-  border-right: 1px solid #1e3a5c;
-}
-.pr-step:last-child { border-right: none; }
-.pr-step.active { background: #1a3a5c; color: #f0e6c8; }
-.pr-num {
-  display: block;
-  font-size: clamp(14px, 3.5vw, 18px);
+.header-titles { flex: 1; min-width: 0; }
+.header-nation-ja {
+  font-size: clamp(22px, 5vw, 32px);
   font-weight: 600;
-  color: #c8a84b;
-  margin-bottom: 2px;
-  line-height: 1;
+  color: #f0e6c8;
+  letter-spacing: .05em;
+  line-height: 1.1;
 }
-
-/* ===== MAIN WRAPPER ===== */
-.wrap {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: clamp(12px, 4vw, 24px) clamp(10px, 4vw, 16px);
+.header-nation-en {
+  font-size: clamp(13px, 3vw, 17px);
+  color: var(--gold-lt);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-top: 3px;
+  font-weight: 400;
 }
-
-/* ===== NOTICE ===== */
-.notice {
-  background: #fff8e8;
-  border: 1px solid #c8a84b;
-  border-left: 5px solid #c8a84b;
-  padding: 12px 14px;
-  margin-bottom: 20px;
-  font-size: clamp(11px, 3vw, 13px);
-  color: #3a2800;
-  line-height: 1.7;
-}
-.notice-label {
-  display: block;
+.header-ministry {
   font-size: clamp(9px, 2.2vw, 11px);
+  color: #8aaac8;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: #8b6914;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(184,146,42,.25);
+  line-height: 1.6;
+}
+.header-portal-badge {
+  display: inline-block;
+  background: rgba(184,146,42,.15);
+  border: 1px solid rgba(184,146,42,.4);
+  color: var(--gold-lt);
+  font-size: clamp(9px, 2vw, 10px);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  margin-top: 6px;
+}
+
+/* =============================================
+   FORM NUMBER RIBBON
+   ============================================= */
+.form-ribbon {
+  background: var(--gold);
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 16px;
+  font-size: clamp(9px, 2vw, 10px);
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* =============================================
+   PROGRESS / STEP BAR
+   ============================================= */
+.stepbar {
+  background: var(--navy-mid);
+  display: flex;
+  border-bottom: 2px solid var(--gold);
+}
+.step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(8px, 2.5vw, 12px) 4px;
+  border-right: 1px solid rgba(255,255,255,.07);
+  cursor: default;
+  position: relative;
+  transition: background .2s;
+}
+.step:last-child { border-right: none; }
+.step.active { background: rgba(184,146,42,.15); }
+.step.done { background: rgba(26,69,112,.4); }
+.step-num {
+  width: clamp(20px, 5vw, 26px);
+  height: clamp(20px, 5vw, 26px);
+  border-radius: 50%;
+  border: 1.5px solid #3a5a7a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(10px, 2.5vw, 13px);
+  font-weight: 600;
+  color: #6a8aaa;
   margin-bottom: 4px;
+  font-family: 'Source Code Pro', monospace;
+}
+.step.active .step-num { border-color: var(--gold); color: var(--gold); }
+.step.done .step-num { border-color: #4a8a6a; color: #4a8a6a; }
+.step-label {
+  font-size: clamp(7px, 1.8vw, 9px);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #4a6a8a;
+}
+.step.active .step-label { color: #c8a84b; }
+
+/* =============================================
+   PAGE LAYOUT
+   ============================================= */
+.page-body {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: clamp(12px, 4vw, 28px) clamp(10px, 4vw, 20px);
+}
+
+/* =============================================
+   OFFICIAL NOTICE BOX
+   ============================================= */
+.official-notice {
+  border: 1px solid var(--gold);
+  background: #fffbf0;
+  position: relative;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.official-notice::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, var(--gold-lt), var(--gold), var(--gold-lt));
+}
+.notice-header {
+  background: linear-gradient(to right, #fffbf0, #fff8e0);
+  border-bottom: 1px solid #e8d890;
+  padding: 7px 14px 7px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.notice-header-label {
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #7a5a00;
   font-weight: 700;
 }
+.notice-body {
+  padding: 10px 14px 12px 18px;
+  font-size: clamp(11px, 2.8vw, 12.5px);
+  color: #3a2800;
+  line-height: 1.8;
+}
+.notice-body strong { color: #5a3000; }
 
-/* ===== SECTION TITLE ===== */
-.sec-title {
-  font-size: clamp(9px, 2.5vw, 11px);
-  letter-spacing: .16em;
-  text-transform: uppercase;
+/* =============================================
+   SECTION HEADINGS
+   ============================================= */
+.sec-head {
+  display: flex;
+  align-items: stretch;
+  margin: 26px 0 16px;
+  gap: 0;
+}
+.sec-head-num {
+  background: var(--navy);
+  color: var(--gold);
+  font-family: 'Source Code Pro', monospace;
+  font-size: clamp(10px, 2.5vw, 12px);
+  letter-spacing: .06em;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  border-right: 2px solid var(--gold);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.sec-head-title {
+  background: var(--navy);
   color: #f0e6c8;
-  background: #1a3a5c;
-  padding: 7px 12px;
-  margin: 22px 0 14px;
-  border-left: 4px solid #c8a84b;
+  font-size: clamp(9px, 2.3vw, 11px);
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+.sec-head-title em {
+  color: #8aaac8;
+  font-style: normal;
+  margin-left: 8px;
+  font-size: .9em;
 }
 
-/* ===== FORM GRID ===== */
-.fgrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-.fg { display: flex; flex-direction: column; gap: 4px; }
+/* =============================================
+   FORM FIELDS
+   ============================================= */
+.fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.fg { display: flex; flex-direction: column; gap: 5px; }
 .fg.full { grid-column: 1 / -1; }
+.fg.third { grid-column: span 1; }
 
-label.lbl {
-  font-size: clamp(9px, 2.2vw, 10px);
-  letter-spacing: .08em;
+.field-label {
+  font-size: 9.5px;
+  letter-spacing: .1em;
   text-transform: uppercase;
   color: #4a3a1a;
   font-weight: 700;
-  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1.3;
 }
-label.lbl .req { color: #c0392b; margin-left: 2px; }
+.req { color: var(--red-warn); font-weight: 700; }
+.field-hint {
+  font-size: 9px;
+  color: var(--ink-lt);
+  letter-spacing: .04em;
+  margin-top: -3px;
+  font-style: italic;
+}
 
-input, select, textarea {
-  font-family: 'EB Garamond', serif;
-  font-size: clamp(13px, 3.5vw, 15px);
-  border: 1px solid #c0b090;
-  background: #fffdf8;
-  color: #1a1a2e;
+input[type=text],
+input[type=email],
+input[type=tel],
+input[type=date],
+input[type=number],
+select,
+textarea {
+  font-family: 'EB Garamond', 'Noto Serif JP', serif;
+  font-size: clamp(13px, 3.2vw, 14.5px);
+  border: 1px solid #baa878;
+  background: var(--cream);
+  color: var(--ink);
   padding: 8px 10px;
-  border-radius: 0;
-  outline: none;
   width: 100%;
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color .15s, background .15s, box-shadow .15s;
   -webkit-appearance: none;
   appearance: none;
+  line-height: 1.4;
 }
+input[type=date] { font-family: 'Source Code Pro', monospace; font-size: 13px; color: var(--ink); }
 select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c8a84b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23b8922a'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
   padding-right: 28px;
+  cursor: pointer;
 }
 input:focus, select:focus, textarea:focus {
-  border-color: #1a3a5c;
+  border-color: var(--navy-lt);
   background: #fff;
-  box-shadow: 0 0 0 2px rgba(26,58,92,.1);
+  box-shadow: 0 0 0 3px rgba(22,48,82,.08);
+}
+input::placeholder, textarea::placeholder { color: #aaa090; font-style: italic; }
+
+/* Monospace input for passport numbers etc */
+.mono-input {
+  font-family: 'Source Code Pro', monospace !important;
+  font-size: 13px !important;
+  letter-spacing: .06em;
 }
 
-/* ===== PHOTO UPLOAD ===== */
-.photo-section {
+/* Field with prefix */
+.field-prefix-wrap { position: relative; }
+.field-prefix {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  background: #e8e0c8;
+  border-right: 1px solid #baa878;
   display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  flex-wrap: nowrap;
-}
-.photo-drop-wrap { flex-shrink: 0; }
-.photo-drop {
-  width: clamp(80px, 22vw, 105px);
-  height: clamp(100px, 27vw, 132px);
-  border: 2px dashed #c8a84b;
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background: #faf6ef;
+  padding: 0 8px;
+  font-size: 11px;
+  color: #6a5a3a;
+  font-family: 'Source Code Pro', monospace;
+  letter-spacing: .04em;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  white-space: nowrap;
+}
+.field-prefix + input,
+.field-prefix ~ input { padding-left: 52px; }
+
+/* =============================================
+   PHOTO UPLOAD
+   ============================================= */
+.photo-row { display: flex; gap: 16px; align-items: flex-start; flex-wrap: nowrap; }
+
+.photo-col { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+.photo-frame {
+  width: clamp(90px, 22vw, 112px);
+  height: clamp(110px, 27vw, 140px);
+  border: 2px solid var(--gold);
+  background: var(--cream);
   position: relative;
   overflow: hidden;
-  transition: border-color .2s, background .2s;
+  cursor: pointer;
+  transition: border-color .2s;
   -webkit-tap-highlight-color: transparent;
+  box-shadow: inset 0 0 0 3px rgba(184,146,42,.08);
 }
-.photo-drop:hover, .photo-drop:active {
-  border-color: #1a3a5c;
-  background: #f0ecdf;
-}
-.photo-drop img {
+.photo-frame:hover { border-color: var(--navy-lt); }
+.photo-frame::before {
+  content: '';
   position: absolute;
-  top: 0; left: 0;
+  top: 4px; left: 4px; right: 4px; bottom: 4px;
+  border: 1px dashed rgba(184,146,42,.3);
+  pointer-events: none;
+  z-index: 1;
+}
+.photo-frame img {
+  position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
+  z-index: 2;
 }
 .photo-inner {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
+  position: absolute; inset: 0; z-index: 3;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 6px; padding: 8px;
   pointer-events: none;
-  text-align: center;
-  padding: 4px;
 }
-.photo-icon { font-size: clamp(18px, 5vw, 24px); }
+.photo-icon { font-size: clamp(22px, 5.5vw, 28px); }
 .photo-txt {
-  font-size: clamp(9px, 2vw, 11px);
-  color: #8b7a5a;
-  letter-spacing: .03em;
-  text-transform: uppercase;
-  line-height: 1.4;
-}
-.photo-sizememo {
-  font-size: clamp(8px, 2vw, 10px);
-  color: #8b7a5a;
+  font-size: clamp(9px, 2vw, 10px);
+  color: #8a7a5a;
   text-align: center;
-  margin-top: 4px;
-  letter-spacing: .03em;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+.photo-size-tag {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 9px;
+  color: #8a7a5a;
+  letter-spacing: .06em;
+  border: 1px solid #c8b888;
+  padding: 2px 6px;
+  background: #fffbf0;
 }
 #photoInput { display: none; }
 
-.photo-notes {
+.photo-specs {
   flex: 1;
-  font-size: clamp(10px, 2.8vw, 12px);
-  color: #5a4a2a;
-  line-height: 1.85;
   min-width: 0;
 }
-.photo-notes li {
-  list-style: none;
-  padding-left: 13px;
-  position: relative;
-}
-.photo-notes li::before {
-  content: "•";
-  position: absolute;
-  left: 0;
-  color: #c8a84b;
-}
-
-/* ===== VISA TYPE CARDS ===== */
-.visa-type-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 4px;
-}
-.vt-card {
-  border: 1.5px solid #c0b090;
-  padding: clamp(8px, 2.5vw, 12px);
-  cursor: pointer;
-  background: #fffdf8;
-  transition: all .2s;
-  text-align: center;
-  -webkit-tap-highlight-color: transparent;
-}
-.vt-card:hover, .vt-card:active { border-color: #c8a84b; background: #fff8ec; }
-.vt-card.selected { border-color: #1a3a5c; background: #e8f0f8; border-width: 2px; }
-.vt-name {
-  font-size: clamp(10px, 2.5vw, 12px);
-  font-weight: 600;
-  color: #1a3a5c;
-  margin-bottom: 4px;
-  letter-spacing: .02em;
-  line-height: 1.4;
-}
-.vt-days { font-size: clamp(9px, 2.2vw, 11px); color: #6b5a3a; margin-bottom: 6px; line-height: 1.3; }
-.vt-price { font-size: clamp(16px, 4vw, 20px); font-weight: 600; color: #0d2240; }
-.vt-note { font-size: clamp(8px, 2vw, 10px); color: #8b7a5a; margin-top: 3px; }
-
-/* ===== CASH NOTICE ===== */
-.cash-notice {
-  background: #fff8e8;
-  border: 1px solid #e0a020;
-  padding: 12px 14px;
-  margin-top: 12px;
-  font-size: clamp(11px, 2.8vw, 12px);
-  color: #4a2800;
-  line-height: 1.8;
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-.cash-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
-.cash-label {
-  display: block;
-  color: #8b4a00;
-  font-size: clamp(9px, 2.2vw, 11px);
-  letter-spacing: .08em;
+.specs-title {
+  font-size: 10px;
+  letter-spacing: .1em;
   text-transform: uppercase;
-  margin-bottom: 4px;
+  color: #4a3a1a;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #d8c898;
+}
+.spec-list { list-style: none; }
+.spec-list li {
+  font-size: clamp(10px, 2.6vw, 11.5px);
+  color: #5a4a2a;
+  padding: 3px 0 3px 14px;
+  position: relative;
+  line-height: 1.5;
+  border-bottom: 1px solid rgba(200,184,136,.2);
+}
+.spec-list li:last-child { border-bottom: none; }
+.spec-list li::before {
+  content: '–';
+  position: absolute; left: 0;
+  color: var(--gold);
+}
+.spec-list .warn { color: var(--red-warn); font-weight: 600; }
+
+/* =============================================
+   VISA TYPE SELECTOR
+   ============================================= */
+.visa-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+
+.vt-card {
+  border: 1.5px solid #c0b080;
+  background: var(--cream);
+  cursor: pointer;
+  transition: all .15s;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+.vt-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: transparent;
+  transition: background .15s;
+}
+.vt-card:hover { border-color: var(--gold); background: #fffbf0; }
+.vt-card.selected { border-color: var(--navy-lt); border-width: 2px; background: #eef4fc; }
+.vt-card.selected::before { background: var(--navy-lt); }
+
+.vt-inner { padding: clamp(8px, 2.5vw, 12px); }
+.vt-badge {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 8px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #8a7a5a;
+  background: #e8e0c8;
+  display: inline-block;
+  padding: 2px 6px;
+  margin-bottom: 6px;
+}
+.vt-card.selected .vt-badge { background: rgba(22,48,82,.1); color: var(--navy-mid); }
+.vt-name { font-size: clamp(11px, 2.8vw, 12.5px); font-weight: 600; color: var(--navy); line-height: 1.35; margin-bottom: 3px; }
+.vt-en { font-size: clamp(9px, 2.2vw, 10px); color: #6a5a3a; font-style: italic; margin-bottom: 6px; }
+.vt-duration {
+  font-family: 'Source Code Pro', monospace;
+  font-size: clamp(9px, 2.2vw, 10px);
+  color: #5a6a4a;
+  background: rgba(90,106,74,.08);
+  display: inline-block;
+  padding: 2px 6px;
+  margin-bottom: 8px;
+}
+.vt-price { font-size: clamp(18px, 4.5vw, 22px); font-weight: 600; color: var(--navy); line-height: 1; }
+.vt-price-unit { font-size: 10px; color: var(--ink-lt); font-weight: 400; display: block; margin-top: 2px; }
+.vt-check {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid #c0b080;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  transition: all .15s;
+}
+.vt-card.selected .vt-check { border-color: var(--navy-lt); background: var(--navy-lt); color: white; }
+
+/* =============================================
+   PAYMENT BOX
+   ============================================= */
+.payment-box {
+  border: 1px solid #d0b860;
+  background: linear-gradient(135deg, #fffbf0, #fff8e0);
+  padding: 0;
+  overflow: hidden;
+}
+.payment-head {
+  background: linear-gradient(to right, #0b1f3a, #163052);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid var(--gold);
+}
+.payment-head-icon { font-size: 20px; flex-shrink: 0; }
+.payment-head-text {
+  font-size: clamp(9px, 2.3vw, 11px);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--gold-lt);
   font-weight: 700;
 }
-.cash-en {
-  font-size: clamp(9px, 2.2vw, 11px);
-  color: #7a5030;
-  margin-top: 4px;
-  display: block;
+.payment-head-sub {
+  font-size: clamp(9px, 2vw, 10px);
+  color: #8aaac8;
+  letter-spacing: .04em;
+  margin-top: 1px;
+}
+.payment-body { padding: 14px 16px; }
+.payment-rule {
+  font-size: clamp(11px, 2.8vw, 12.5px);
+  color: #3a2800;
+  line-height: 1.85;
+  margin-bottom: 10px;
+}
+.payment-rule strong { color: #6a3a00; }
+.payment-rule em { font-style: italic; color: #5a4a2a; font-size: .92em; }
+.payment-highlight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(184,146,42,.08);
+  border: 1px solid rgba(184,146,42,.3);
+  padding: 8px 12px;
+  font-size: clamp(10px, 2.5vw, 11.5px);
+  color: #4a3000;
   font-style: italic;
 }
+.payment-highlight::before { content: '⚠'; font-style: normal; flex-shrink: 0; }
 
-/* ===== DECLARATION ===== */
-.decl {
-  background: #f4f0e8;
-  border: 1px solid #b0a888;
+/* =============================================
+   DECLARATION
+   ============================================= */
+.decl-box {
+  border: 1px solid #b0a878;
+  background: #fffdf8;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.decl-head {
+  background: #f0ece0;
+  padding: 7px 14px;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #5a4a2a;
+  border-bottom: 1px solid #c8b888;
+  font-weight: 700;
+}
+.decl-body {
   padding: 14px 16px;
-  font-size: clamp(11px, 2.8vw, 12px);
-  line-height: 1.9;
-  color: #2a2a2a;
-  margin-bottom: 14px;
+  font-size: clamp(11px, 2.8vw, 12.5px);
+  line-height: 1.95;
+  color: var(--ink-mid);
   font-style: italic;
 }
+.decl-ja { margin-bottom: 10px; font-style: normal; color: var(--ink-mid); }
+.decl-en { color: #5a5a6a; font-style: italic; font-size: .95em; }
 
-/* ===== CHECKBOXES ===== */
+/* =============================================
+   CHECKBOXES
+   ============================================= */
+.cb-group { display: flex; flex-direction: column; gap: 0; }
 .cb-row {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  margin-bottom: 10px;
-  line-height: 1.6;
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(200,184,136,.3);
+  background: var(--cream);
+  transition: background .15s;
 }
-.cb-row input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  min-width: 16px;
+.cb-row:first-child { border-top: 1px solid rgba(200,184,136,.3); }
+.cb-row:hover { background: #fffbf0; }
+.cb-row input[type=checkbox] {
+  width: 15px; height: 15px; min-width: 15px;
   margin-top: 3px;
-  accent-color: #1a3a5c;
+  accent-color: var(--navy);
   cursor: pointer;
-  padding: 0;
-  border: none;
+  padding: 0; border: none; background: none;
+  -webkit-appearance: auto; appearance: auto;
 }
 .cb-row label {
-  font-size: clamp(11px, 3vw, 13px);
-  color: #1a1a2e;
+  font-size: clamp(11px, 2.8vw, 12.5px);
+  color: var(--ink-mid);
   cursor: pointer;
+  line-height: 1.6;
   font-family: 'EB Garamond', serif;
   text-transform: none;
   letter-spacing: normal;
   font-weight: 400;
 }
-
-/* ===== SIGNATURE ===== */
-.sig-wrap {
-  border: 1px solid #c0b090;
-  background: #fffdf8;
-  padding: 8px;
-  margin-top: 4px;
+.cb-row label .cb-num {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 9px;
+  color: #8a7a5a;
+  background: #e8e0c8;
+  padding: 1px 5px;
+  margin-right: 6px;
+  vertical-align: middle;
 }
+
+/* =============================================
+   SIGNATURE
+   ============================================= */
+.sig-container {
+  border: 1px solid #baa878;
+  background: var(--cream);
+  overflow: hidden;
+}
+.sig-header {
+  background: #f0ece0;
+  border-bottom: 1px solid #c8b888;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.sig-header-label {
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #4a3a1a;
+  font-weight: 700;
+}
+.btn-sig-clear {
+  background: none;
+  border: 1px solid #c0b080;
+  padding: 3px 10px;
+  font-family: 'EB Garamond', serif;
+  font-size: 11px;
+  cursor: pointer;
+  color: #5a4a2a;
+  letter-spacing: .04em;
+  transition: background .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-sig-clear:hover, .btn-sig-clear:active { background: #e8dcc0; }
 #sigCanvas {
   display: block;
-  border: 1px dashed #c8a84b;
-  background: #fff;
   width: 100%;
   height: 110px;
   cursor: crosshair;
   touch-action: none;
+  background: #fff;
 }
-.sig-controls {
+.sig-footer {
+  background: #f8f4e8;
+  border-top: 1px solid #d8c898;
+  padding: 5px 12px;
+  font-size: 10px;
+  color: #8a7a5a;
+  letter-spacing: .06em;
+  font-style: italic;
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 7px;
-  flex-wrap: wrap;
+  justify-content: space-between;
 }
-.btn-clear {
-  background: none;
-  border: 1px solid #c0b090;
-  padding: 5px 14px;
-  font-family: 'EB Garamond', serif;
-  font-size: clamp(10px, 2.5vw, 12px);
-  cursor: pointer;
-  letter-spacing: .05em;
-  color: #4a3a1a;
-  transition: background .15s;
-  -webkit-tap-highlight-color: transparent;
-}
-.btn-clear:hover, .btn-clear:active { background: #f0e8d0; }
-.sig-hint {
-  font-size: clamp(9px, 2.5vw, 11px);
-  color: #8b7a5a;
-  letter-spacing: .03em;
+.sig-footer .sig-legal {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 9px;
+  color: #aaa090;
 }
 
-/* ===== SUBMIT BUTTON ===== */
+/* =============================================
+   SUBMIT BUTTON
+   ============================================= */
+.submit-section {
+  margin-top: 20px;
+  border: 1px solid #baa878;
+  overflow: hidden;
+}
+.submit-top {
+  background: #f8f4e8;
+  border-bottom: 1px solid #d8c898;
+  padding: 8px 14px;
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #6a5a3a;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 .btn-submit {
   width: 100%;
-  background: #0d2240;
+  background: linear-gradient(to bottom, #163052, #0b1f3a);
   color: #f0e6c8;
   border: none;
-  padding: clamp(12px, 3.5vw, 16px);
-  font-family: 'EB Garamond', serif;
-  font-size: clamp(13px, 3.5vw, 16px);
+  padding: clamp(14px, 4vw, 18px) 20px;
+  font-family: 'EB Garamond', 'Noto Serif JP', serif;
+  font-size: clamp(14px, 3.5vw, 17px);
   font-weight: 600;
-  letter-spacing: .13em;
+  letter-spacing: .14em;
   text-transform: uppercase;
   cursor: pointer;
-  border-top: 3px solid #c8a84b;
-  margin-top: 12px;
+  border-top: 3px solid var(--gold);
   transition: background .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   -webkit-tap-highlight-color: transparent;
 }
-.btn-submit:hover, .btn-submit:active { background: #1a3a5c; }
+.btn-submit:hover, .btn-submit:active {
+  background: linear-gradient(to bottom, #1e4570, #163052);
+}
+.btn-submit-icon { font-size: 20px; }
 
-/* ===== WATERMARK ===== */
-.watermark {
-  text-align: center;
-  color: #c0b090;
-  font-size: clamp(8px, 2vw, 10px);
-  letter-spacing: .07em;
-  margin: 16px 0 0;
-  opacity: .7;
-  line-height: 1.5;
+/* =============================================
+   FORM FOOTER / WATERMARK
+   ============================================= */
+.form-footer-bar {
+  margin-top: 24px;
+  border-top: 1px solid #c8b888;
+  padding-top: 12px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.form-footer-left {
+  font-family: 'Source Code Pro', monospace;
+  font-size: clamp(8px, 2vw, 9px);
+  color: #aaa090;
+  letter-spacing: .06em;
+  line-height: 1.8;
+}
+.form-footer-right {
+  font-size: clamp(8px, 2vw, 9px);
+  color: #aaa090;
+  text-align: right;
+  line-height: 1.8;
+  font-style: italic;
 }
 
-/* ===== FOOTER ===== */
-.footer {
-  background: #0d2240;
-  color: #6880a0;
-  text-align: center;
-  font-size: clamp(9px, 2.2vw, 11px);
-  padding: 16px;
+/* =============================================
+   SITE FOOTER
+   ============================================= */
+.site-footer {
+  background: var(--navy);
+  color: #5a7a9a;
+  padding: 20px 16px;
+  margin-top: 36px;
+  border-top: 4px solid var(--gold);
+  font-size: clamp(10px, 2.5vw, 11px);
   letter-spacing: .04em;
   line-height: 1.9;
-  margin-top: 32px;
-  border-top: 3px double #1e3a5c;
 }
-.footer-strong { color: #a0b8d0; letter-spacing: .1em; }
-.footer-copy { color: #4a6080; font-size: clamp(8px, 2vw, 10px); margin-top: 4px; display: block; }
+.site-footer-inner { max-width: 800px; margin: 0 auto; }
+.site-footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 14px; }
+.footer-col-title {
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(184,146,42,.3);
+}
+.footer-divider { height: 1px; background: rgba(255,255,255,.06); margin: 12px 0; }
+.footer-copy {
+  font-size: 9px;
+  color: #3a5a7a;
+  text-align: center;
+  letter-spacing: .06em;
+  line-height: 1.7;
+}
 
-/* ===== MODAL ===== */
-.modal-bg {
+/* =============================================
+   MODAL
+   ============================================= */
+.modal-overlay {
   display: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(5,15,35,.88);
-  z-index: 999;
+  position: fixed; inset: 0;
+  background: rgba(5,12,30,.9);
+  z-index: 9000;
   align-items: center;
   justify-content: center;
   padding: 16px;
+  backdrop-filter: blur(2px);
 }
-.modal-bg.open { display: flex; }
+.modal-overlay.open { display: flex; }
 .modal {
-  background: #fffdf8;
-  border: 1px solid #c8a84b;
+  background: var(--cream);
+  border: 1px solid var(--gold);
   width: 100%;
-  max-width: 460px;
+  max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  box-shadow: 0 20px 80px rgba(0,0,0,.7);
 }
-.modal-hdr {
-  background: #0d2240;
-  padding: 18px 20px;
+.modal-stamp-header {
+  background: linear-gradient(to bottom, #163052, #0b1f3a);
+  border-bottom: 3px solid var(--gold);
+  padding: 20px 22px 16px;
   text-align: center;
-  border-bottom: 3px solid #c8a84b;
-  position: sticky;
-  top: 0;
 }
-.modal-stamp { font-size: 44px; display: block; margin-bottom: 6px; }
-.modal-hdr h3 {
+.modal-emblem { font-size: 46px; display: block; margin-bottom: 8px; }
+.modal-status-badge {
+  display: inline-block;
+  background: rgba(26,180,90,.15);
+  border: 1px solid rgba(26,180,90,.5);
+  color: #4ad890;
+  font-size: 9px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  margin-bottom: 8px;
+  font-family: 'Source Code Pro', monospace;
+}
+.modal-title {
   color: #f0e6c8;
-  font-size: clamp(15px, 4vw, 19px);
+  font-size: clamp(16px, 4vw, 20px);
   font-weight: 600;
-  letter-spacing: .04em;
 }
-.modal-ref { color: #c8a84b; font-size: clamp(9px, 2.5vw, 11px); letter-spacing: .14em; margin-top: 4px; }
+.modal-title-en { font-size: clamp(11px, 2.8vw, 13px); color: #8aaac8; font-weight: 400; display: block; margin-top: 2px; }
+.modal-ref-num {
+  font-family: 'Source Code Pro', monospace;
+  font-size: clamp(10px, 2.5vw, 12px);
+  color: var(--gold);
+  margin-top: 8px;
+  letter-spacing: .1em;
+}
 .modal-body { padding: 18px 20px; }
-.app-num {
-  background: #eee8d8;
-  border: 1px solid #c8a84b;
+.modal-app-num {
+  background: #f0ece0;
+  border: 1px solid var(--gold);
   padding: 10px 14px;
   text-align: center;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
-.app-num small { display: block; font-size: clamp(8px, 2.2vw, 10px); letter-spacing: .1em; text-transform: uppercase; color: #8b7a5a; margin-bottom: 2px; }
-.app-num span { font-size: clamp(14px, 4vw, 18px); font-weight: 600; letter-spacing: .1em; color: #0d2240; word-break: break-all; }
-.modal-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-bottom: 14px;
-}
-.m-card {
-  background: #f4f0e8;
-  border: 1px solid #d0c8b8;
-  padding: 8px 10px;
-  font-size: clamp(10px, 2.5vw, 12px);
-  color: #3a2800;
-  line-height: 1.6;
-}
-.m-card strong {
+.modal-app-num small {
   display: block;
-  font-size: clamp(8px, 2vw, 10px);
-  letter-spacing: .08em;
+  font-size: 9px;
+  letter-spacing: .12em;
   text-transform: uppercase;
-  color: #8b6914;
-  margin-bottom: 2px;
+  color: #8a7a5a;
+  margin-bottom: 4px;
+  font-family: 'Source Code Pro', monospace;
 }
-.modal-steps { border: 1px solid #c8a84b; overflow: hidden; margin-bottom: 16px; }
-.modal-steps table { width: 100%; border-collapse: collapse; font-size: clamp(10px, 2.8vw, 12px); }
-.modal-steps th { background: #1a3a5c; color: #f0e6c8; padding: 6px 10px; font-size: clamp(8px, 2.2vw, 10px); letter-spacing: .08em; text-transform: uppercase; text-align: left; }
-.modal-steps td { padding: 7px 10px; border-bottom: 1px solid #e0d8c8; color: #1a1a2e; vertical-align: top; }
-.modal-steps tr:last-child td { border-bottom: none; }
-.modal-steps .sn { color: #c8a84b; font-weight: 700; width: 22px; }
-.modal-ftr {
-  background: #f0e8d0;
-  border-top: 1px solid #c8a84b;
+.modal-app-num span {
+  font-family: 'Source Code Pro', monospace;
+  font-size: clamp(15px, 4vw, 19px);
+  font-weight: 600;
+  color: var(--navy);
+  letter-spacing: .1em;
+  word-break: break-all;
+}
+.modal-info-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+.modal-info-card {
+  background: #fff;
+  border: 1px solid #d8c898;
+  padding: 9px 10px;
+}
+.modal-info-card .info-lbl {
+  font-size: 8px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #8a7a5a;
+  margin-bottom: 3px;
+  font-family: 'Source Code Pro', monospace;
+  display: block;
+}
+.modal-info-card .info-val {
+  font-size: clamp(11px, 2.8vw, 12.5px);
+  color: var(--navy);
+  font-weight: 500;
+  line-height: 1.3;
+}
+.modal-next-table { border: 1px solid var(--gold); overflow: hidden; margin-bottom: 14px; }
+.modal-next-table table { width: 100%; border-collapse: collapse; font-size: clamp(11px, 2.7vw, 12px); }
+.modal-next-table th { background: var(--navy-mid); color: #f0e6c8; padding: 7px 12px; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; text-align: left; border-bottom: 2px solid var(--gold); }
+.modal-next-table td { padding: 8px 10px; border-bottom: 1px solid #e8d898; color: var(--ink-mid); vertical-align: top; line-height: 1.6; }
+.modal-next-table tr:last-child td { border-bottom: none; }
+.modal-next-table .step-n { color: var(--gold); font-weight: 700; font-family: 'Source Code Pro', monospace; width: 22px; font-size: 13px; }
+.modal-footer-bar {
+  background: #f0ece0;
+  border-top: 1px solid #d8c898;
   padding: 12px 20px;
   display: flex;
   align-items: center;
@@ -559,412 +991,672 @@ input:focus, select:focus, textarea:focus {
   gap: 12px;
   flex-wrap: wrap;
 }
-.modal-ftr p { font-size: clamp(9px, 2.5vw, 11px); color: #4a3800; line-height: 1.6; flex: 1; min-width: 160px; }
+.modal-footer-bar p { font-size: clamp(10px, 2.5vw, 11px); color: #4a3800; line-height: 1.6; flex: 1; min-width: 160px; font-style: italic; }
 .btn-modal-close {
-  background: #0d2240;
+  background: var(--navy);
   color: #f0e6c8;
   border: none;
-  padding: 10px 18px;
+  border-top: 2px solid var(--gold);
+  padding: 10px 20px;
   font-family: 'EB Garamond', serif;
-  font-size: clamp(11px, 3vw, 13px);
+  font-size: clamp(11px, 2.8vw, 13px);
   letter-spacing: .1em;
   text-transform: uppercase;
   cursor: pointer;
-  border-top: 2px solid #c8a84b;
   white-space: nowrap;
   flex-shrink: 0;
+  transition: background .15s;
   -webkit-tap-highlight-color: transparent;
 }
-.btn-modal-close:hover, .btn-modal-close:active { background: #1a3a5c; }
+.btn-modal-close:hover, .btn-modal-close:active { background: var(--navy-lt); }
 
-/* ===== MOBILE OVERRIDES ===== */
-@media (max-width: 520px) {
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 580px) {
   .fgrid { grid-template-columns: 1fr; }
   .fg.full { grid-column: 1; }
-
-  .visa-type-grid { grid-template-columns: 1fr; gap: 8px; }
-  .vt-card { display: flex; align-items: center; gap: 10px; text-align: left; }
-  .vt-price { font-size: 18px; min-width: 60px; }
-  .vt-days { margin-bottom: 0; }
-
-  .modal-cards { grid-template-columns: 1fr; }
-
-  .hdr-inner { flex-direction: column; gap: 8px; }
-  .hdr-text { text-align: center; }
-
-  .photo-section { gap: 12px; }
+  .visa-selector { grid-template-columns: 1fr; gap: 8px; }
+  .vt-inner { display: flex; align-items: center; gap: 12px; justify-content: space-between; }
+  .vt-badge { margin-bottom: 0; }
+  .vt-en { margin-bottom: 0; }
+  .vt-right { text-align: right; flex-shrink: 0; }
+  .modal-info-row { grid-template-columns: 1fr; }
+  .site-footer-grid { grid-template-columns: 1fr; gap: 12px; }
+  .header-body { gap: 12px; }
+  .coa-circle { width: 60px; height: 60px; font-size: 30px; }
 }
-
-@media (max-width: 360px) {
-  .pr-step { font-size: 7px; letter-spacing: .02em; }
-  .pr-num { font-size: 13px; }
+@media (max-width: 400px) {
+  .stepbar .step-label { display: none; }
+  .photo-row { gap: 10px; }
 }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="hdr">
-  <div class="hdr-inner">
-    <div class="coat">🗻</div>
-    <div class="hdr-text">
-      <div class="hdr-title-sub">Ministry of Foreign Affairs &amp; Tourism</div>
-      <div class="hdr-title-main">静岡共和国</div>
-      <div class="hdr-title-en">Republic of Shizuoka</div>
-      <div class="hdr-title-portal">Official Electronic Visa Application Portal</div>
+<!-- SECURITY BANNER -->
+<div class="sec-banner">
+  <span><span class="lock">🔒</span> HTTPS — SECURE CONNECTION ESTABLISHED — SSL/TLS 1.3 ENCRYPTED</span>
+  <span class="right">EVISA.MOFA.SHIZUOKA.GOV.SZ</span>
+</div>
+
+<!-- MAIN HEADER -->
+<div class="main-header">
+  <div class="header-gold-top"></div>
+  <div class="header-body">
+    <div class="coa-wrap">
+      <div class="coa-circle">🗻</div>
+      <div class="coa-label">紋章</div>
+    </div>
+    <div class="header-titles">
+      <div class="header-nation-ja">静岡共和国</div>
+      <div class="header-nation-en">Republic of Shizuoka</div>
+      <div class="header-ministry">
+        外務観光省 電子渡航認証局<br>
+        Ministry of Foreign Affairs &amp; Tourism — Electronic Travel Authorization Bureau
+      </div>
+      <div class="header-portal-badge">Official eVisa Application Portal</div>
     </div>
   </div>
-  <div class="hdr-divider"></div>
-  <div class="hdr-decree">Established by Presidential Decree No. 1 — Shizuoka eVisa Act 2019 — Form SZ-TV/2026-R</div>
+  <div class="header-gold-bottom"></div>
 </div>
 
-<div class="ribbon">観光電子ビザ申請システム — Tourist eVisa Application System — Form SZ-TV/2026</div>
-
-<div class="progress">
-  <div class="pr-step active"><span class="pr-num">1</span>Personal Info</div>
-  <div class="pr-step"><span class="pr-num">2</span>Documents</div>
-  <div class="pr-step"><span class="pr-num">3</span>Review</div>
-  <div class="pr-step"><span class="pr-num">4</span>Submit</div>
+<!-- FORM RIBBON -->
+<div class="form-ribbon">
+  <span>申請書番号 Form No. SZ-TV/2026-R &nbsp;|&nbsp; 観光電子ビザ Tourist eVisa</span>
+  <span>申請期間 14営業日前まで &nbsp;|&nbsp; Apply min. 14 business days in advance</span>
 </div>
 
-<div class="wrap">
+<!-- STEP BAR -->
+<div class="stepbar">
+  <div class="step active">
+    <div class="step-num">01</div>
+    <div class="step-label">個人情報</div>
+  </div>
+  <div class="step">
+    <div class="step-num">02</div>
+    <div class="step-label">書類提出</div>
+  </div>
+  <div class="step">
+    <div class="step-num">03</div>
+    <div class="step-label">内容確認</div>
+  </div>
+  <div class="step">
+    <div class="step-num">04</div>
+    <div class="step-label">最終提出</div>
+  </div>
+</div>
 
-  <div class="notice">
-    <span class="notice-label">⚠ Important Notice — 重要なお知らせ</span>
-    静岡共和国への入国にはすべての外国人に対して有効な観光ビザが必要です。申請は渡航予定日の<strong>最低14営業日前</strong>に完了してください。富士山周辺地域（標高2,500m以上）への立入りには別途「高山帯立入特別許可証（Form SZ-MT/A）」が必要となります。
+<!-- PAGE BODY -->
+<div class="page-body">
+
+  <!-- OFFICIAL NOTICE -->
+  <div class="official-notice">
+    <div class="notice-header">
+      <span>⚠</span>
+      <span class="notice-header-label">重要なお知らせ — Official Notice</span>
+    </div>
+    <div class="notice-body">
+      静岡共和国（以下「本国」）への入国には、国籍を問わずすべての外国人旅行者に対し<strong>有効な電子観光ビザ（eVisa）</strong>が必要です。申請は出発予定日の<strong>最低14営業日前</strong>に完了してください。富士山周辺地域（標高2,500m以上）への立入りには、別途「高山帯立入特別許可証（Form SZ-MT/A）」の取得が必要です。本申請に際し提供された個人情報は、静岡個人情報保護法（第12条）に基づき厳重に管理されます。
+    </div>
   </div>
 
   <!-- §1 個人情報 -->
-  <div class="sec-title">§ 1 — Personal Information / 個人情報</div>
-
-  <div class="photo-section">
-    <div class="photo-drop-wrap">
-      <label class="photo-drop" for="photoInput" id="photoDrop">
-        <div class="photo-inner" id="photoInner">
-          <span class="photo-icon">📷</span>
-          <span class="photo-txt">タップして<br>アップロード<br>Click / Tap</span>
-        </div>
-      </label>
-      <input type="file" id="photoInput" accept="image/*" capture="user">
-      <div class="photo-sizememo">45mm × 35mm</div>
-    </div>
-    <ul class="photo-notes">
-      <li>白背景・正面・無帽</li>
-      <li>申請日より6ヶ月以内撮影</li>
-      <li>カラー写真のみ</li>
-      <li>メガネ不可</li>
-      <li>JPG / PNG 最大5MB</li>
-      <li style="color:#c0392b;font-weight:600">申請後の写真変更は不可</li>
-    </ul>
+  <div class="sec-head">
+    <div class="sec-head-num">§ 01</div>
+    <div class="sec-head-title">Personal Information <em>/ 個人情報</em></div>
   </div>
 
-  <div class="fgrid" style="margin-top:14px">
+  <!-- PHOTO -->
+  <div class="photo-row" style="margin-bottom:18px">
+    <div class="photo-col">
+      <label class="photo-frame" for="photoInput" id="photoFrame">
+        <div class="photo-inner" id="photoInner">
+          <span class="photo-icon">📷</span>
+          <span class="photo-txt">Click / Tap<br>写真を追加</span>
+        </div>
+      </label>
+      <input type="file" id="photoInput" accept="image/*">
+      <div class="photo-size-tag">45mm × 35mm</div>
+    </div>
+    <div class="photo-specs">
+      <div class="specs-title">写真要件 Photo Requirements</div>
+      <ul class="spec-list">
+        <li>白無地背景 White plain background</li>
+        <li>正面向き・無帽 Face front, no headwear</li>
+        <li>申請日より6ヶ月以内撮影 Taken within 6 months</li>
+        <li>カラー写真のみ Colour only — no black &amp; white</li>
+        <li>眼鏡・サングラス不可 No glasses or sunglasses</li>
+        <li>ファイル形式：JPG / PNG &nbsp;最大 5MB</li>
+        <li class="warn">申請提出後の写真変更は一切不可</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="fgrid">
     <div class="fg">
-      <label class="lbl">姓 Family Name <span class="req">*</span></label>
-      <input type="text" placeholder="YAMADA" autocomplete="family-name">
+      <div class="field-label">姓 Family Name <span class="req">*</span></div>
+      <input type="text" placeholder="YAMADA" autocomplete="family-name" class="mono-input">
+      <div class="field-hint">ローマ字大文字 / Capital letters as in passport</div>
     </div>
     <div class="fg">
-      <label class="lbl">名 Given Name <span class="req">*</span></label>
-      <input type="text" placeholder="TARO" autocomplete="given-name">
+      <div class="field-label">名 Given Name <span class="req">*</span></div>
+      <input type="text" placeholder="TARO" autocomplete="given-name" class="mono-input">
+      <div class="field-hint">ローマ字大文字 / Capital letters as in passport</div>
     </div>
     <div class="fg">
-      <label class="lbl">姓（漢字）Family Name (Kanji)</label>
+      <div class="field-label">姓（漢字）Family Name — Kanji</div>
       <input type="text" placeholder="山田">
     </div>
     <div class="fg">
-      <label class="lbl">名（漢字）Given Name (Kanji)</label>
+      <div class="field-label">名（漢字）Given Name — Kanji</div>
       <input type="text" placeholder="太郎">
     </div>
     <div class="fg">
-      <label class="lbl">性別 Gender <span class="req">*</span></label>
+      <div class="field-label">性別 Sex / Gender <span class="req">*</span></div>
       <select>
-        <option value="">— 選択 Select —</option>
-        <option>男性 Male</option>
-        <option>女性 Female</option>
-        <option>その他 Other / Non-binary</option>
+        <option value="">— 選択してください Select —</option>
+        <option value="M">男性 Male</option>
+        <option value="F">女性 Female</option>
+        <option value="X">その他 Other / Non-binary</option>
       </select>
     </div>
     <div class="fg">
-      <label class="lbl">生年月日 Date of Birth <span class="req">*</span></label>
+      <div class="field-label">生年月日 Date of Birth <span class="req">*</span></div>
       <input type="date" autocomplete="bday">
+      <div class="field-hint">YYYY-MM-DD</div>
     </div>
     <div class="fg">
-      <label class="lbl">出生地 Place of Birth <span class="req">*</span></label>
+      <div class="field-label">出生地 Place of Birth <span class="req">*</span></div>
       <input type="text" placeholder="Tokyo, Japan">
     </div>
     <div class="fg">
-      <label class="lbl">国籍 Nationality <span class="req">*</span></label>
+      <div class="field-label">婚姻状況 Marital Status</div>
+      <select>
+        <option value="">— 選択 Select —</option>
+        <option>未婚 Single</option>
+        <option>既婚 Married</option>
+        <option>その他 Other</option>
+      </select>
+    </div>
+    <div class="fg">
+      <div class="field-label">国籍 Nationality <span class="req">*</span></div>
       <select>
         <option value="">— 選択 Select —</option>
         <option>日本 Japan</option>
-        <option>アメリカ USA</option>
+        <option>アメリカ合衆国 United States</option>
         <option>中国 China</option>
         <option>韓国 South Korea</option>
         <option>フランス France</option>
         <option>ドイツ Germany</option>
+        <option>オーストラリア Australia</option>
         <option>その他 Other</option>
       </select>
     </div>
     <div class="fg">
-      <label class="lbl">職業 Occupation <span class="req">*</span></label>
-      <input type="text" placeholder="会社員 / Company Employee">
+      <div class="field-label">現住国 Country of Residence <span class="req">*</span></div>
+      <select>
+        <option value="">— 選択 Select —</option>
+        <option>日本 Japan</option>
+        <option>アメリカ合衆国 United States</option>
+        <option>中国 China</option>
+        <option>韓国 South Korea</option>
+        <option>フランス France</option>
+        <option>ドイツ Germany</option>
+        <option>オーストラリア Australia</option>
+        <option>その他 Other</option>
+      </select>
     </div>
     <div class="fg">
-      <label class="lbl">雇用者名 Employer Name</label>
-      <input type="text" placeholder="株式会社〇〇 / ABC Corp.">
+      <div class="field-label">職業 Occupation <span class="req">*</span></div>
+      <select>
+        <option value="">— 選択 Select —</option>
+        <option>会社員 Company Employee</option>
+        <option>公務員 Government Official</option>
+        <option>自営業 Self-employed</option>
+        <option>学生 Student</option>
+        <option>退職 Retired</option>
+        <option>その他 Other</option>
+      </select>
+    </div>
+    <div class="fg">
+      <div class="field-label">雇用主・学校名 Employer / Institution</div>
+      <input type="text" placeholder="株式会社〇〇 / ABC Corporation">
     </div>
     <div class="fg full">
-      <label class="lbl">自国の住所 Home Address <span class="req">*</span></label>
+      <div class="field-label">現住所 Home Address <span class="req">*</span></div>
       <input type="text" placeholder="1-1-1 Shibuya, Shibuya-ku, Tokyo 150-0001, Japan" autocomplete="street-address">
     </div>
     <div class="fg">
-      <label class="lbl">電話番号 Phone Number <span class="req">*</span></label>
-      <input type="tel" placeholder="+81 90-XXXX-XXXX" autocomplete="tel">
+      <div class="field-label">電話番号 Phone Number <span class="req">*</span></div>
+      <div class="field-prefix-wrap" style="position:relative">
+        <span class="field-prefix" style="position:absolute;left:0;top:0;bottom:0;background:#e8e0c8;border-right:1px solid #baa878;display:flex;align-items:center;padding:0 8px;font-size:11px;color:#6a5a3a;font-family:'Source Code Pro',monospace;z-index:1">+XX</span>
+        <input type="tel" placeholder="90-XXXX-XXXX" autocomplete="tel" style="padding-left:48px">
+      </div>
     </div>
     <div class="fg">
-      <label class="lbl">メールアドレス Email <span class="req">*</span></label>
-      <input type="email" placeholder="taro.yamada@email.com" autocomplete="email">
+      <div class="field-label">メールアドレス Email Address <span class="req">*</span></div>
+      <input type="email" placeholder="taro.yamada@example.com" autocomplete="email">
+      <div class="field-hint">審査結果の通知先 — For visa decision notification</div>
+    </div>
+    <div class="fg">
+      <div class="field-label">緊急連絡先氏名 Emergency Contact Name <span class="req">*</span></div>
+      <input type="text" placeholder="Hanako Yamada">
+    </div>
+    <div class="fg">
+      <div class="field-label">緊急連絡先電話番号 Emergency Contact Phone <span class="req">*</span></div>
+      <input type="tel" placeholder="+81 90-XXXX-XXXX">
     </div>
   </div>
 
   <!-- §2 パスポート -->
-  <div class="sec-title">§ 2 — Passport Information / パスポート情報</div>
+  <div class="sec-head">
+    <div class="sec-head-num">§ 02</div>
+    <div class="sec-head-title">Passport Information <em>/ パスポート情報</em></div>
+  </div>
+
   <div class="fgrid">
     <div class="fg">
-      <label class="lbl">パスポート番号 Passport No. <span class="req">*</span></label>
-      <input type="text" placeholder="AB1234567">
+      <div class="field-label">パスポート番号 Passport Number <span class="req">*</span></div>
+      <input type="text" placeholder="AB1234567" class="mono-input">
     </div>
     <div class="fg">
-      <label class="lbl">パスポート番号（確認）Confirm <span class="req">*</span></label>
-      <input type="text" placeholder="AB1234567">
+      <div class="field-label">パスポート番号（確認）Confirm Number <span class="req">*</span></div>
+      <input type="text" placeholder="AB1234567" class="mono-input">
+      <div class="field-hint">再入力してください / Re-enter to confirm</div>
     </div>
     <div class="fg">
-      <label class="lbl">発行国 Issuing Country <span class="req">*</span></label>
+      <div class="field-label">パスポート種別 Passport Type <span class="req">*</span></div>
+      <select>
+        <option value="">— 選択 Select —</option>
+        <option value="P">一般旅券 Ordinary (P)</option>
+        <option value="D">外交旅券 Diplomatic (D)</option>
+        <option value="S">公用旅券 Official (S)</option>
+      </select>
+    </div>
+    <div class="fg">
+      <div class="field-label">発行国 Issuing Country <span class="req">*</span></div>
       <input type="text" placeholder="Japan">
     </div>
     <div class="fg">
-      <label class="lbl">発行機関 Issuing Authority <span class="req">*</span></label>
+      <div class="field-label">発行機関 Issuing Authority <span class="req">*</span></div>
       <input type="text" placeholder="Ministry of Foreign Affairs">
     </div>
     <div class="fg">
-      <label class="lbl">発行日 Date of Issue <span class="req">*</span></label>
+      <div class="field-label">発行都市 Issuing City / Office <span class="req">*</span></div>
+      <input type="text" placeholder="Tokyo">
+    </div>
+    <div class="fg">
+      <div class="field-label">発行日 Date of Issue <span class="req">*</span></div>
       <input type="date">
     </div>
     <div class="fg">
-      <label class="lbl">有効期限 Expiry Date <span class="req">*</span></label>
+      <div class="field-label">有効期限 Expiry Date <span class="req">*</span></div>
       <input type="date">
+      <div class="field-hint">入国予定日より最低6ヶ月以上の有効期限が必要</div>
     </div>
     <div class="fg full">
-      <label class="lbl">MRZ番号（任意）Machine Readable Zone</label>
-      <input type="text" placeholder="P&lt;JPNYAMADA&lt;&lt;TARO&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;" style="font-family:monospace;font-size:12px;letter-spacing:.04em">
+      <div class="field-label">MRZ（機械読取領域）Machine Readable Zone — Line 2</div>
+      <input type="text" class="mono-input" placeholder="AB1234567JPN8001011M2812315" style="font-size:12px;letter-spacing:.05em">
+      <div class="field-hint">パスポート顔写真ページ下部のコード / Bottom of photo page (optional)</div>
     </div>
   </div>
 
   <!-- §3 渡航情報 -->
-  <div class="sec-title">§ 3 — Travel Information / 渡航情報</div>
+  <div class="sec-head">
+    <div class="sec-head-num">§ 03</div>
+    <div class="sec-head-title">Travel Information <em>/ 渡航情報</em></div>
+  </div>
+
   <div class="fgrid">
     <div class="fg">
-      <label class="lbl">入国予定日 Intended Entry <span class="req">*</span></label>
+      <div class="field-label">入国予定日 Intended Date of Entry <span class="req">*</span></div>
       <input type="date">
     </div>
     <div class="fg">
-      <label class="lbl">出国予定日 Intended Departure <span class="req">*</span></label>
+      <div class="field-label">出国予定日 Intended Date of Departure <span class="req">*</span></div>
       <input type="date">
     </div>
     <div class="fg">
-      <label class="lbl">訪問目的 Purpose of Visit <span class="req">*</span></label>
+      <div class="field-label">入国予定港 Port of Entry <span class="req">*</span></div>
       <select>
         <option value="">— 選択 Select —</option>
-        <option>観光 Tourism</option>
+        <option>静岡国際空港 Shizuoka International Airport</option>
+        <option>清水港 Shimizu Port</option>
+        <option>富士山陸路 Fuji Mountain Land Border</option>
+        <option>熱海海路 Atami Sea Route</option>
+      </select>
+    </div>
+    <div class="fg">
+      <div class="field-label">訪問目的 Purpose of Visit <span class="req">*</span></div>
+      <select>
+        <option value="">— 選択 Select —</option>
+        <option>観光 Tourism / Sightseeing</option>
         <option>富士山登山 Mt. Fuji Climbing</option>
         <option>温泉療養 Onsen / Wellness</option>
-        <option>茶道・文化体験 Tea Culture</option>
-        <option>グルメ Culinary Tourism</option>
-        <option>友人・親族訪問 Visiting Friends/Relatives</option>
+        <option>茶道・文化体験 Tea Culture Experience</option>
+        <option>グルメ・食文化 Culinary Tourism</option>
+        <option>友人・親族訪問 Visiting Friends or Relatives</option>
         <option>その他 Other</option>
       </select>
     </div>
     <div class="fg">
-      <label class="lbl">過去の静岡訪問 Previous Visits</label>
+      <div class="field-label">滞在形態 Type of Accommodation <span class="req">*</span></div>
       <select>
-        <option>初めて First visit</option>
-        <option>1〜2回 1–2 times</option>
-        <option>3回以上 3 or more times</option>
+        <option value="">— 選択 Select —</option>
+        <option>ホテル Hotel</option>
+        <option>旅館 Ryokan (Japanese inn)</option>
+        <option>民宿・民泊 Guesthouse / Airbnb</option>
+        <option>知人宅 Staying with friends/relatives</option>
+      </select>
+    </div>
+    <div class="fg">
+      <div class="field-label">過去5年以内の本国訪問歴 Previous Visits (last 5 years)</div>
+      <select>
+        <option>なし（初回訪問）None — First visit</option>
+        <option>1回 Once</option>
+        <option>2〜3回 2–3 times</option>
+        <option>4回以上 4 or more times</option>
       </select>
     </div>
     <div class="fg full">
-      <label class="lbl">滞在先ホテル・住所 Accommodation in Shizuoka <span class="req">*</span></label>
-      <input type="text" placeholder="例：グランドホテル浜松 / Grand Hotel Hamamatsu, 1-1 Ekimae, Naka-ku, Hamamatsu">
+      <div class="field-label">滞在先住所（静岡共和国内）Accommodation Address in Shizuoka <span class="req">*</span></div>
+      <input type="text" placeholder="例：グランドホテル浜松 / Grand Hotel Hamamatsu, 1-1 Ekimae-cho, Naka-ku, Hamamatsu 430-0028">
     </div>
     <div class="fg full">
-      <label class="lbl">訪問予定地 Planned Areas of Visit</label>
+      <div class="field-label">訪問予定地域 Planned Regions of Visit</div>
       <select>
         <option value="">— 選択 Select —</option>
-        <option>静岡市 Shizuoka City</option>
+        <option>静岡市（葵区・駿河区・清水区）Shizuoka City</option>
         <option>浜松市 Hamamatsu City</option>
-        <option>富士山・富士宮 Mt. Fuji / Fujinomiya</option>
-        <option>伊豆半島 Izu Peninsula</option>
-        <option>熱海 Atami</option>
-        <option>全域 All areas</option>
+        <option>富士山・富士宮市 Mt. Fuji / Fujinomiya</option>
+        <option>伊豆半島（伊東・下田・修善寺）Izu Peninsula</option>
+        <option>熱海・湯河原 Atami / Yugawara</option>
+        <option>掛川・磐田 Kakegawa / Iwata</option>
+        <option>全域 All regions of Shizuoka</option>
+      </select>
+    </div>
+    <div class="fg full">
+      <div class="field-label">渡航資金（滞在期間中の予算）Available Funds for Stay</div>
+      <select>
+        <option value="">— 選択 Select —</option>
+        <option>¥50,000未満 Under ¥50,000</option>
+        <option>¥50,000〜¥150,000</option>
+        <option>¥150,000〜¥500,000</option>
+        <option>¥500,000以上 Over ¥500,000</option>
       </select>
     </div>
   </div>
 
   <!-- §4 ビザ種別 -->
-  <div class="sec-title">§ 4 — Visa Type &amp; Fee / ビザ種別・手数料</div>
+  <div class="sec-head">
+    <div class="sec-head-num">§ 04</div>
+    <div class="sec-head-title">Visa Category &amp; Fee <em>/ ビザ種別・手数料</em></div>
+  </div>
 
-  <div class="visa-type-grid" id="vtGrid">
-    <div class="vt-card selected" data-price="3800" data-type="単次観光ビザ" onclick="selectVisa(this)">
-      <div>
-        <div class="vt-name">単次入国<br>Single Entry</div>
-        <div class="vt-days">最大30日 / Up to 30 days</div>
-      </div>
-      <div>
-        <div class="vt-price">¥3,800</div>
-        <div class="vt-note">入国時現金払い</div>
-      </div>
-    </div>
-    <div class="vt-card" data-price="9500" data-type="複数回観光ビザ" onclick="selectVisa(this)">
-      <div>
-        <div class="vt-name">複数回入国<br>Multiple Entry</div>
-        <div class="vt-days">最大90日 / Up to 90 days</div>
-      </div>
-      <div>
-        <div class="vt-price">¥9,500</div>
-        <div class="vt-note">入国時現金払い</div>
+  <div class="visa-selector" id="vtGrid">
+    <div class="vt-card selected" data-price="3800" data-type="単次観光ビザ / Single Entry" onclick="selectVisa(this)">
+      <div class="vt-check">✓</div>
+      <div class="vt-inner">
+        <div>
+          <div class="vt-badge">SZ-TV-S</div>
+          <div class="vt-name">単次入国<br>Single Entry</div>
+          <div class="vt-en">Visa touristique — entrée unique</div>
+          <div class="vt-duration">最大 30日 / Max. 30 days</div>
+        </div>
+        <div class="vt-right">
+          <div class="vt-price">¥3,800</div>
+          <div class="vt-price-unit">入国時現金払い<br>Cash on arrival</div>
+        </div>
       </div>
     </div>
-    <div class="vt-card" data-price="6200" data-type="富士登山特別許可付き観光ビザ" onclick="selectVisa(this)">
-      <div>
-        <div class="vt-name">富士登山許可付<br>+ Fuji Permit</div>
-        <div class="vt-days">最大15日 / Up to 15 days</div>
+    <div class="vt-card" data-price="9500" data-type="複数回観光ビザ / Multiple Entry" onclick="selectVisa(this)">
+      <div class="vt-check"></div>
+      <div class="vt-inner">
+        <div>
+          <div class="vt-badge">SZ-TV-M</div>
+          <div class="vt-name">複数回入国<br>Multiple Entry</div>
+          <div class="vt-en">Visa touristique — entrées multiples</div>
+          <div class="vt-duration">最大 90日 / Max. 90 days</div>
+        </div>
+        <div class="vt-right">
+          <div class="vt-price">¥9,500</div>
+          <div class="vt-price-unit">入国時現金払い<br>Cash on arrival</div>
+        </div>
       </div>
-      <div>
-        <div class="vt-price">¥6,200</div>
-        <div class="vt-note">入国時現金払い</div>
+    </div>
+    <div class="vt-card" data-price="6200" data-type="富士登山特別許可付き観光ビザ / + Fuji Permit" onclick="selectVisa(this)">
+      <div class="vt-check"></div>
+      <div class="vt-inner">
+        <div>
+          <div class="vt-badge">SZ-TV-F</div>
+          <div class="vt-name">富士登山許可付<br>+ Fuji Summit Permit</div>
+          <div class="vt-en">Visa + permis d'ascension Fuji</div>
+          <div class="vt-duration">最大 15日 / Max. 15 days</div>
+        </div>
+        <div class="vt-right">
+          <div class="vt-price">¥6,200</div>
+          <div class="vt-price-unit">入国時現金払い<br>Cash on arrival</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="cash-notice">
-    <div class="cash-icon">💴</div>
-    <div>
-      <span class="cash-label">💴 ビザ手数料の支払い方法 — Payment of Visa Fee</span>
-      ビザ手数料は<strong>入国審査時に現金（日本円）にてお支払いいただきます。</strong>事前の振込・カード払いは受け付けておりません。入国ゲートの窓口担当官に直接お支払いください。釣り銭が出ない場合がありますので、<strong>必ず小銭をご準備ください。</strong>
-      <span class="cash-en">Visa fees are collected in Japanese Yen (JPY) cash at the border inspection counter upon arrival. No advance payment accepted. Please prepare exact change. Receipt is provided verbally.</span>
+  <!-- PAYMENT BOX -->
+  <div class="payment-box">
+    <div class="payment-head">
+      <span class="payment-head-icon">💴</span>
+      <div>
+        <div class="payment-head-text">ビザ手数料の支払い方法 — Method of Payment</div>
+        <div class="payment-head-sub">Official Payment Policy — Republic of Shizuoka Ministry of Finance Directive No. 44</div>
+      </div>
+    </div>
+    <div class="payment-body">
+      <div class="payment-rule">
+        ビザ手数料は<strong>入国審査時（入国ゲート窓口）に現金（日本円）にてお支払いいただきます。</strong>事前のオンライン決済・銀行振込・クレジットカード払いは一切受け付けておりません。窓口担当官に直接お渡しください。
+      </div>
+      <div class="payment-rule">
+        <em>Visa fees are collected exclusively in Japanese Yen (JPY) cash at the border inspection counter upon arrival. No advance payment, wire transfer, or card payment is accepted. Please pay directly to the inspecting officer.</em>
+      </div>
+      <div class="payment-highlight">
+        釣り銭の用意がない場合があります。<strong>必ず正確な金額をご準備ください。</strong>領収書は口頭確認にて発行されます。Prepare exact change. No receipt is issued in writing.
+      </div>
     </div>
   </div>
 
   <!-- §5 宣誓書・署名 -->
-  <div class="sec-title">§ 5 — Declaration &amp; Signature / 宣誓書・署名</div>
-
-  <div class="decl">
-    私は、この申請書に記載した情報がすべて真実かつ正確であることを誓います。虚偽の申告がある場合、本申請は無効となり静岡共和国への入国を永久に禁止される場合があります。また、静岡共和国の法律・規則を遵守することを誓います。<br><br>
-    <em>I solemnly declare that all information provided herein is true, complete and accurate. Any false declaration may result in rejection of this application and permanent prohibition of entry into the Republic of Shizuoka.</em>
+  <div class="sec-head">
+    <div class="sec-head-num">§ 05</div>
+    <div class="sec-head-title">Declaration &amp; Signature <em>/ 宣誓書・署名</em></div>
   </div>
 
-  <div class="cb-row">
-    <input type="checkbox" id="c1">
-    <label for="c1">上記宣誓書の内容を理解し、同意します。I agree to and understand the declaration above.</label>
-  </div>
-  <div class="cb-row">
-    <input type="checkbox" id="c2">
-    <label for="c2">静岡共和国の入国規則・観光ガイドラインを遵守することに同意します。I agree to comply with all entry regulations of the Republic of Shizuoka.</label>
-  </div>
-  <div class="cb-row">
-    <input type="checkbox" id="c3">
-    <label for="c3">個人情報の取り扱い方針（Privacy Policy）に同意します。I consent to the processing of my personal data per Shizuoka Privacy Act §12.</label>
-  </div>
-  <div class="cb-row">
-    <input type="checkbox" id="c4">
-    <label for="c4">🍵 滞在中に静岡産のお茶を少なくとも1杯飲むことを厳粋に誓います。I solemnly swear to consume at least one cup of authentic Shizuoka green tea during my stay.</label>
-  </div>
-
-  <div class="fg" style="margin-top:16px">
-    <label class="lbl">署名 Applicant's Signature <span class="req">*</span></label>
-    <div class="sig-wrap">
-      <canvas id="sigCanvas"></canvas>
-      <div class="sig-controls">
-        <button class="btn-clear" onclick="clearSig()">✕ クリア Clear</button>
-        <span class="sig-hint">マウスまたはタッチでご署名ください — Sign with mouse or touch</span>
+  <div class="decl-box">
+    <div class="decl-head">申請者宣誓書 — Applicant's Solemn Declaration (Form SZ-DEC/01)</div>
+    <div class="decl-body">
+      <div class="decl-ja">
+        私は、本申請書に記載した全ての情報が真実かつ正確であることを厳粛に宣誓します。虚偽の申告または重要事項の不申告が判明した場合、本申請は即時無効となり、静岡共和国への入国を永久に禁止されるとともに、静岡行政法典第88条に基づく罰則が適用される場合があります。また、滞在中は静岡共和国の全ての法律・規則を遵守することを誓います。
+      </div>
+      <div class="decl-en">
+        I solemnly declare that all information provided in this application is true, complete, and accurate to the best of my knowledge. I understand that any false statement or material omission may result in immediate rejection of this application, permanent prohibition of entry into the Republic of Shizuoka, and penalties under Shizuoka Administrative Code Article 88. I further solemnly undertake to comply with all laws and regulations of the Republic of Shizuoka for the duration of my stay.
       </div>
     </div>
   </div>
 
-  <div class="watermark">
-    Republic of Shizuoka — eVisa Application System v4.2<br>
-    Secure SSL Encrypted — Form SZ-TV/2026-R
+  <div class="cb-group">
+    <div class="cb-row">
+      <input type="checkbox" id="c1">
+      <label for="c1"><span class="cb-num">01</span>上記宣誓書の内容を完全に理解し、同意します。I fully understand and agree to the declaration above.</label>
+    </div>
+    <div class="cb-row">
+      <input type="checkbox" id="c2">
+      <label for="c2"><span class="cb-num">02</span>静岡共和国の入国規則・観光ガイドライン（令和8年改訂版）を遵守することに同意します。I agree to comply with all entry regulations and tourism guidelines (2026 revision).</label>
+    </div>
+    <div class="cb-row">
+      <input type="checkbox" id="c3">
+      <label for="c3"><span class="cb-num">03</span>個人情報の取り扱い方針（静岡個人情報保護法 §12）に同意します。I consent to the processing of my personal data pursuant to Shizuoka Privacy Protection Act §12.</label>
+    </div>
+    <div class="cb-row">
+      <input type="checkbox" id="c4">
+      <label for="c4"><span class="cb-num">04</span>過去5年以内に入国を拒否または強制退去させられたことはありません。I have not been denied entry or deported from any country within the last 5 years.</label>
+    </div>
+    <div class="cb-row">
+      <input type="checkbox" id="c5">
+      <label for="c5"><span class="cb-num">05</span>🍵 滞在中に静岡産の本山茶を少なくとも1杯飲むことを厳粛かつ誠実に誓います。I solemnly and sincerely swear to consume at least one cup of authentic Shizuoka Honyama green tea during my stay.</label>
+    </div>
   </div>
 
-  <button class="btn-submit" onclick="submitForm()">申請を提出する — Submit Application →</button>
+  <!-- SIGNATURE -->
+  <div class="fg" style="margin-top:18px">
+    <div class="field-label">申請者署名 Applicant's Signature <span class="req">*</span></div>
+    <div class="field-hint" style="margin-bottom:6px">パスポートと同じ署名でご記入ください / Sign exactly as in your passport</div>
+    <div class="sig-container">
+      <div class="sig-header">
+        <span class="sig-header-label">署名欄 — Signature Panel</span>
+        <button class="btn-sig-clear" onclick="clearSig()">✕ クリア / Clear</button>
+      </div>
+      <canvas id="sigCanvas"></canvas>
+      <div class="sig-footer">
+        <span>マウスまたはタッチでご署名ください — Sign with mouse or touch</span>
+        <span class="sig-legal">SIG-PANEL-SZ-TV/2026</span>
+      </div>
+    </div>
+  </div>
 
-</div><!-- /wrap -->
+  <!-- SUBMIT -->
+  <div class="submit-section">
+    <div class="submit-top">
+      <span>⚠</span>
+      <span>送信前に全項目をご確認ください — Please review all fields before submitting</span>
+    </div>
+    <button class="btn-submit" onclick="submitForm()">
+      <span class="btn-submit-icon">📋</span>
+      申請を提出する — Submit Official Application
+    </button>
+  </div>
 
-<div class="footer">
-  <div class="footer-strong">静岡共和国 外務観光省 / Ministry of Foreign Affairs &amp; Tourism</div>
-  〒420-8601 静岡県静岡市葵区追手町9番地6号 / Otemachi 9-6, Aoi-ku, Shizuoka City 420-8601<br>
-  Tel: 054-000-0000 | Fax: 054-000-0001 | evisa@mofa.shizuoka.gov.sz<br>
-  受付時間: 平日 9:00–17:00（静岡共和国標準時 JST +9:00）
-  <span class="footer-copy">© 2026 Republic of Shizuoka. All rights reserved. Unauthorized duplication of this form is a violation of Shizuoka Administrative Code §44.</span>
+  <!-- FORM FOOTER -->
+  <div class="form-footer-bar">
+    <div class="form-footer-left">
+      FORM NO: SZ-TV/2026-R<br>
+      ISSUING AUTH: MOFA-SHIZUOKA-ETAB<br>
+      REV: 2026-04-01 / v4.3
+    </div>
+    <div class="form-footer-right">
+      本申請書は静岡共和国政府が発行する公式文書です。<br>
+      This is an official document issued by the Government<br>
+      of the Republic of Shizuoka.
+    </div>
+  </div>
+
+</div><!-- /page-body -->
+
+<!-- SITE FOOTER -->
+<div class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-grid">
+      <div>
+        <div class="footer-col-title">外務観光省 Ministry of Foreign Affairs &amp; Tourism</div>
+        〒420-8601 静岡県静岡市葵区追手町9番地6号<br>
+        Otemachi 9-6, Aoi-ku, Shizuoka City 420-8601<br>
+        Republic of Shizuoka<br>
+        Tel: 054-000-0000 &nbsp;|&nbsp; Fax: 054-000-0001
+      </div>
+      <div>
+        <div class="footer-col-title">電子ビザ申請サポート eVisa Support</div>
+        Email: evisa@mofa.shizuoka.gov.sz<br>
+        受付時間 Office Hours: 平日 Mon–Fri 09:00–17:00<br>
+        静岡共和国標準時 SRT (UTC+9:00)<br>
+        緊急連絡先 Emergency: 054-000-9999
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-copy">
+      © 2026 Government of the Republic of Shizuoka. All rights reserved.<br>
+      本フォームの無断複製・改変は静岡行政法典第44条に基づき処罰の対象となります。<br>
+      Unauthorized reproduction or modification of this form is prohibited under Shizuoka Administrative Code Article 44.
+    </div>
+  </div>
 </div>
 
-<!-- MODAL -->
-<div class="modal-bg" id="modalBg">
+<!-- ========== MODAL ========== -->
+<div class="modal-overlay" id="modalOverlay">
   <div class="modal">
-    <div class="modal-hdr">
-      <span class="modal-stamp">🗻</span>
-      <h3>申請受理完了<br><span style="font-size:.75em;font-weight:400;letter-spacing:.05em">Application Successfully Received</span></h3>
-      <div class="modal-ref" id="mRef">Reference No. SZ-2026-TV-XXXXXX</div>
+    <div class="modal-stamp-header">
+      <span class="modal-emblem">🗻</span>
+      <div class="modal-status-badge">✓ APPLICATION RECEIVED — 申請受理完了</div>
+      <div class="modal-title">
+        申請受理完了
+        <span class="modal-title-en">Application Successfully Received</span>
+      </div>
+      <div class="modal-ref-num" id="mRef">Reference No. SZ-2026-TV-XXXXXX</div>
     </div>
     <div class="modal-body">
-      <div class="app-num">
+      <div class="modal-app-num">
         <small>申請受理番号 Application Reference Number</small>
         <span id="appNum">SZ-2026-TV-000000</span>
       </div>
-      <div class="modal-cards">
-        <div class="m-card">
-          <strong>ビザ種別 Visa Type</strong>
-          <span id="mVtype">単次観光ビザ</span>
+      <div class="modal-info-row">
+        <div class="modal-info-card">
+          <span class="info-lbl">ビザ種別 Visa Type</span>
+          <span class="info-val" id="mVtype">単次観光ビザ</span>
         </div>
-        <div class="m-card">
-          <strong>手数料 Fee on Arrival</strong>
-          <span id="mFee">¥3,800（現金）</span>
+        <div class="modal-info-card">
+          <span class="info-lbl">手数料 Fee on Arrival</span>
+          <span class="info-val" id="mFee">¥3,800（現金）</span>
         </div>
-        <div class="m-card">
-          <strong>審査期間 Processing</strong>
-          5〜7営業日
+        <div class="modal-info-card">
+          <span class="info-lbl">審査期間 Processing</span>
+          <span class="info-val">5〜7営業日</span>
         </div>
       </div>
-      <div class="modal-steps">
+      <div class="modal-next-table">
         <table>
           <tr><th colspan="2">今後の手続き — Next Steps</th></tr>
-          <tr><td class="sn">①</td><td>審査結果はご登録メールアドレスに送付されます。Results will be emailed within 5–7 business days.</td></tr>
-          <tr><td class="sn">②</td><td>承認通知書（eVisa）をプリントアウトして入国時にご提示ください。Print the eVisa approval letter and present at the border.</td></tr>
-          <tr><td class="sn">③</td><td>入国審査窓口にて<strong>現金（日本円）</strong>でビザ手数料をお支払いください。Pay visa fee in cash (JPY) at the border counter upon arrival.</td></tr>
-          <tr><td class="sn">④</td><td>🍵 静岡茶をお楽しみください。Enjoy your Shizuoka green tea.</td></tr>
+          <tr>
+            <td class="step-n">①</td>
+            <td>審査結果はご登録のメールアドレスへ5〜7営業日以内に送付されます。<br><em>Results will be sent to your registered email within 5–7 business days.</em></td>
+          </tr>
+          <tr>
+            <td class="step-n">②</td>
+            <td>承認通知書（eVisa）を印刷し、入国時に有効なパスポートとともにご提示ください。<br><em>Print the eVisa approval letter and present it with your valid passport at the border.</em></td>
+          </tr>
+          <tr>
+            <td class="step-n">③</td>
+            <td>入国審査窓口にて<strong>現金（日本円）</strong>でビザ手数料をお支払いください。正確な金額をご準備ください。<br><em>Pay the visa fee in cash (JPY) at the border inspection counter. Prepare exact change.</em></td>
+          </tr>
+          <tr>
+            <td class="step-n">④</td>
+            <td>🍵 静岡本山茶を心ゆくまでご堪能ください。<br><em>Enjoy your authentic Shizuoka Honyama green tea.</em></td>
+          </tr>
         </table>
       </div>
     </div>
-    <div class="modal-ftr">
-      <p>このページを印刷または保存してください。申請番号は問い合わせ時に必要です。<br><em>Please save or print this confirmation for your records.</em></p>
-      <button class="btn-modal-close" onclick="document.getElementById('modalBg').classList.remove('open')">閉じる Close</button>
+    <div class="modal-footer-bar">
+      <p>このページを印刷または保存してください。申請番号はお問い合わせの際に必要です。<br><em>Please print or save this page. You will need your reference number for any enquiries.</em></p>
+      <button class="btn-modal-close" onclick="closeModal()">閉じる / Close</button>
     </div>
   </div>
 </div>
 
 <script>
-/* ===== ビザ選択 ===== */
-var selPrice = 3800, selType = '単次観光ビザ';
+/* ===== Visa type selector ===== */
+var selPrice = 3800;
+var selType  = '単次観光ビザ / Single Entry';
+
 function selectVisa(el) {
-  document.querySelectorAll('.vt-card').forEach(function(c){ c.classList.remove('selected'); });
+  document.querySelectorAll('.vt-card').forEach(function(c) {
+    c.classList.remove('selected');
+    c.querySelector('.vt-check').textContent = '';
+  });
   el.classList.add('selected');
+  el.querySelector('.vt-check').textContent = '✓';
   selPrice = parseInt(el.getAttribute('data-price'));
   selType  = el.getAttribute('data-type');
 }
 
-/* ===== 写真アップロード ===== */
+/* ===== Photo upload ===== */
 var photoInput = document.getElementById('photoInput');
-var photoDrop  = document.getElementById('photoDrop');
+var photoFrame = document.getElementById('photoFrame');
 var photoInner = document.getElementById('photoInner');
 
 photoInput.addEventListener('change', function(e) {
@@ -972,10 +1664,10 @@ photoInput.addEventListener('change', function(e) {
   if (!file) return;
   var reader = new FileReader();
   reader.onload = function(ev) {
-    var img = photoDrop.querySelector('img');
+    var img = photoFrame.querySelector('img');
     if (!img) {
       img = document.createElement('img');
-      photoDrop.appendChild(img);
+      photoFrame.appendChild(img);
     }
     img.src = ev.target.result;
     photoInner.style.display = 'none';
@@ -983,25 +1675,28 @@ photoInput.addEventListener('change', function(e) {
   reader.readAsDataURL(file);
 });
 
-/* ===== 署名キャンバス ===== */
+/* ===== Signature canvas ===== */
 var canvas  = document.getElementById('sigCanvas');
 var ctx     = canvas.getContext('2d');
 var drawing = false;
+var hasSig  = false;
 
 function initCanvas() {
   var rect = canvas.getBoundingClientRect();
-  /* 既存の描画内容を保持してリサイズ */
-  var saved = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  canvas.width  = Math.round(rect.width)  || 600;
-  canvas.height = Math.round(rect.height) || 110;
-  ctx.strokeStyle = '#1a1a2e';
-  ctx.lineWidth   = 1.8;
+  var w = Math.round(rect.width) || 600;
+  var h = 110;
+  if (canvas.width === w) return;
+  var saved = hasSig ? ctx.getImageData(0, 0, canvas.width, canvas.height) : null;
+  canvas.width  = w;
+  canvas.height = h;
+  ctx.strokeStyle = '#1c1c2e';
+  ctx.lineWidth   = 1.6;
   ctx.lineCap     = 'round';
   ctx.lineJoin    = 'round';
-  try { ctx.putImageData(saved, 0, 0); } catch(e) {}
+  if (saved) { try { ctx.putImageData(saved, 0, 0); } catch(e) {} }
 }
 
-window.addEventListener('load',   initCanvas);
+window.addEventListener('load',   function() { setTimeout(initCanvas, 50); });
 window.addEventListener('resize', function() { setTimeout(initCanvas, 100); });
 
 function getPos(e) {
@@ -1013,57 +1708,57 @@ function getPos(e) {
   };
 }
 
-/* マウス */
 canvas.addEventListener('mousedown', function(e) {
-  drawing = true;
-  var p = getPos(e);
-  ctx.beginPath();
-  ctx.moveTo(p.x, p.y);
+  drawing = true; hasSig = true;
+  var p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y);
 });
 canvas.addEventListener('mousemove', function(e) {
   if (!drawing) return;
-  var p = getPos(e);
-  ctx.lineTo(p.x, p.y);
-  ctx.stroke();
+  var p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke();
 });
 canvas.addEventListener('mouseup',    function() { drawing = false; });
 canvas.addEventListener('mouseleave', function() { drawing = false; });
-
-/* タッチ（スマホ） */
 canvas.addEventListener('touchstart', function(e) {
-  e.preventDefault();
-  drawing = true;
-  var p = getPos(e);
-  ctx.beginPath();
-  ctx.moveTo(p.x, p.y);
+  e.preventDefault(); drawing = true; hasSig = true;
+  var p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y);
 }, { passive: false });
-
 canvas.addEventListener('touchmove', function(e) {
-  e.preventDefault();
-  if (!drawing) return;
-  var p = getPos(e);
-  ctx.lineTo(p.x, p.y);
-  ctx.stroke();
+  e.preventDefault(); if (!drawing) return;
+  var p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke();
 }, { passive: false });
-
 canvas.addEventListener('touchend', function() { drawing = false; });
 
 function clearSig() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  hasSig = false;
 }
 
-/* ===== 申請送信 ===== */
+/* ===== Submit / Modal ===== */
 function genRef() {
-  return 'SZ-2026-TV-' + Math.floor(100000 + Math.random() * 900000);
+  var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  var r = 'SZ-2026-TV-';
+  for (var i = 0; i < 8; i++) r += chars[Math.floor(Math.random() * chars.length)];
+  return r;
 }
+
 function submitForm() {
   var ref = genRef();
   document.getElementById('appNum').textContent = ref;
   document.getElementById('mRef').textContent   = 'Reference No. ' + ref;
   document.getElementById('mVtype').textContent = selType;
   document.getElementById('mFee').textContent   = '¥' + selPrice.toLocaleString() + '（現金 / Cash on arrival）';
-  document.getElementById('modalBg').classList.add('open');
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
 </script>
 </body>
 </html>
