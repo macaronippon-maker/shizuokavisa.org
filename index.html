@@ -7,350 +7,1062 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+JP:wght@400;500;700&display=swap');
 
-/* 基本設定 */
-*{box-sizing:border-box;margin:0;padding:0}
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; }
 
 body {
-    font-family: 'EB Garamond', 'Noto Serif JP', serif;
-    background: #dcd7c9; /* PCで見た時の背景色（外側） */
-    color: #1a1a2e;
-    display: flex;
-    justify-content: center;
-    padding: 0;
+  font-family: 'EB Garamond', 'Noto Serif JP', Georgia, serif;
+  background: #eee8d8;
+  color: #1a1a2e;
+  min-height: 100vh;
+  -webkit-text-size-adjust: 100%;
 }
 
-/* ★最重要：PCでもスマホでも「縦長」を強制するコンテナ */
-.main-wrapper {
-    width: 100%;
-    max-width: 650px; /* PCでの幅を制限し、画像のような縦長を実現 */
-    background: #fffdf8; /* 書類の色 */
-    box-shadow: 0 0 50px rgba(0,0,0,0.2);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-/* ヘッダー */
+/* ===== HEADER ===== */
 .hdr {
-    background: #0d2240;
-    color: #f0e6c8;
-    text-align: center;
-    padding: 30px 20px;
-    border-bottom: 5px double #c8a84b;
+  background: #0d2240;
+  color: #f0e6c8;
+  text-align: center;
+  padding: 20px 16px 16px;
+  border-bottom: 5px double #c8a84b;
 }
-.hdr h2 { font-size: 24px; line-height: 1.2; margin-top: 10px; }
+.hdr-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  max-width: 680px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+.coat { font-size: 56px; line-height: 1; flex-shrink: 0; }
+.hdr-text { text-align: left; }
+.hdr-title-sub {
+  font-size: clamp(10px, 2.5vw, 13px);
+  letter-spacing: .2em;
+  color: #c8a84b;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.hdr-title-main {
+  font-size: clamp(16px, 4vw, 22px);
+  font-weight: 600;
+  color: #f0e6c8;
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+.hdr-title-en {
+  font-size: clamp(12px, 3vw, 15px);
+  letter-spacing: .06em;
+  color: #f0e6c8;
+}
+.hdr-title-portal {
+  font-size: clamp(10px, 2.5vw, 13px);
+  color: #a8b8d0;
+  font-weight: 400;
+  letter-spacing: .04em;
+  margin-top: 2px;
+}
+.hdr-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #c8a84b, transparent);
+  margin: 12px 0;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hdr-decree {
+  font-size: clamp(9px, 2vw, 11px);
+  letter-spacing: .12em;
+  color: #8aa0c0;
+  text-transform: uppercase;
+}
 
-/* 進捗バー */
+/* ===== RIBBON ===== */
+.ribbon {
+  background: #c8a84b;
+  color: #1a1a2e;
+  text-align: center;
+  font-size: clamp(9px, 2.2vw, 11px);
+  font-weight: 700;
+  letter-spacing: .1em;
+  padding: 6px 8px;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* ===== PROGRESS BAR ===== */
 .progress {
-    display: flex;
-    background: #0d2240;
-    border-bottom: 2px solid #c8a84b;
+  display: flex;
+  background: #0d2240;
+  border-bottom: 2px solid #c8a84b;
 }
 .pr-step {
-    flex: 1;
-    text-align: center;
-    padding: 12px 2px;
-    font-size: 10px;
-    color: #8aa0c0;
-    border-right: 1px solid #1e3a5c;
+  flex: 1;
+  text-align: center;
+  padding: clamp(6px, 2vw, 10px) 2px;
+  font-size: clamp(8px, 2vw, 10px);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #8aa0c0;
+  border-right: 1px solid #1e3a5c;
 }
+.pr-step:last-child { border-right: none; }
 .pr-step.active { background: #1a3a5c; color: #f0e6c8; }
+.pr-num {
+  display: block;
+  font-size: clamp(14px, 3.5vw, 18px);
+  font-weight: 600;
+  color: #c8a84b;
+  margin-bottom: 2px;
+  line-height: 1;
+}
 
-/* コンテンツエリア */
-.wrap { padding: 30px 20px; }
+/* ===== MAIN WRAPPER ===== */
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(12px, 4vw, 24px) clamp(10px, 4vw, 16px);
+}
 
+/* ===== NOTICE ===== */
 .notice {
-    background: #fff8e8;
-    border: 1px solid #c8a84b;
-    border-left: 5px solid #c8a84b;
-    padding: 15px;
-    margin-bottom: 25px;
-    font-size: 13px;
-    line-height: 1.6;
+  background: #fff8e8;
+  border: 1px solid #c8a84b;
+  border-left: 5px solid #c8a84b;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  font-size: clamp(11px, 3vw, 13px);
+  color: #3a2800;
+  line-height: 1.7;
+}
+.notice-label {
+  display: block;
+  font-size: clamp(9px, 2.2vw, 11px);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #8b6914;
+  margin-bottom: 4px;
+  font-weight: 700;
 }
 
+/* ===== SECTION TITLE ===== */
 .sec-title {
-    font-size: 12px;
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    color: #f0e6c8;
-    background: #1a3a5c;
-    padding: 10px 15px;
-    margin: 30px 0 15px;
-    border-left: 5px solid #c8a84b;
+  font-size: clamp(9px, 2.5vw, 11px);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #f0e6c8;
+  background: #1a3a5c;
+  padding: 7px 12px;
+  margin: 22px 0 14px;
+  border-left: 4px solid #c8a84b;
 }
 
-/* ★全ての項目を縦1列にする設定（画像通りのスタイル） */
+/* ===== FORM GRID ===== */
 .fgrid {
-    display: flex;
-    flex-direction: column; /* 常に縦並び */
-    gap: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
-.fg {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
+.fg { display: flex; flex-direction: column; gap: 4px; }
+.fg.full { grid-column: 1 / -1; }
 
 label.lbl {
-    font-size: 12px;
-    font-weight: 700;
-    color: #4a3a1a;
-    letter-spacing: 0.05em;
+  font-size: clamp(9px, 2.2vw, 10px);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #4a3a1a;
+  font-weight: 700;
+  line-height: 1.4;
 }
-label.lbl .req { color: #c0392b; margin-left: 4px; }
+label.lbl .req { color: #c0392b; margin-left: 2px; }
 
-input, select {
-    padding: 12px;
-    border: 1px solid #c0b090;
-    background: #fffdf8;
-    font-size: 16px; /* スマホでズームされないサイズ */
-    width: 100%;
-    border-radius: 0;
-    font-family: inherit;
+input, select, textarea {
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(13px, 3.5vw, 15px);
+  border: 1px solid #c0b090;
+  background: #fffdf8;
+  color: #1a1a2e;
+  padding: 8px 10px;
+  border-radius: 0;
+  outline: none;
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c8a84b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: #1a3a5c;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(26,58,92,.1);
 }
 
-/* 写真アップロード */
+/* ===== PHOTO UPLOAD ===== */
 .photo-section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 10px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  flex-wrap: nowrap;
 }
-.photo-box {
-    width: 120px;
-    height: 150px;
-    border: 2px dashed #c8a84b;
-    background: #faf6ef;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+.photo-drop-wrap { flex-shrink: 0; }
+.photo-drop {
+  width: clamp(80px, 22vw, 105px);
+  height: clamp(100px, 27vw, 132px);
+  border: 2px dashed #c8a84b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #faf6ef;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .2s, background .2s;
+  -webkit-tap-highlight-color: transparent;
 }
-.photo-box img { width: 100%; height: 100%; object-fit: cover; position: absolute; }
+.photo-drop:hover, .photo-drop:active {
+  border-color: #1a3a5c;
+  background: #f0ecdf;
+}
+.photo-drop img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.photo-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  pointer-events: none;
+  text-align: center;
+  padding: 4px;
+}
+.photo-icon { font-size: clamp(18px, 5vw, 24px); }
+.photo-txt {
+  font-size: clamp(9px, 2vw, 11px);
+  color: #8b7a5a;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+.photo-sizememo {
+  font-size: clamp(8px, 2vw, 10px);
+  color: #8b7a5a;
+  text-align: center;
+  margin-top: 4px;
+  letter-spacing: .03em;
+}
+#photoInput { display: none; }
 
-/* ビザ選択（縦に並べる） */
-.visa-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.photo-notes {
+  flex: 1;
+  font-size: clamp(10px, 2.8vw, 12px);
+  color: #5a4a2a;
+  line-height: 1.85;
+  min-width: 0;
+}
+.photo-notes li {
+  list-style: none;
+  padding-left: 13px;
+  position: relative;
+}
+.photo-notes li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #c8a84b;
+}
+
+/* ===== VISA TYPE CARDS ===== */
+.visa-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 4px;
 }
 .vt-card {
-    border: 1px solid #c0b090;
-    padding: 15px;
-    background: #fffdf8;
-    cursor: pointer;
-    transition: 0.2s;
+  border: 1.5px solid #c0b090;
+  padding: clamp(8px, 2.5vw, 12px);
+  cursor: pointer;
+  background: #fffdf8;
+  transition: all .2s;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
 }
-.vt-card.selected {
-    border: 2px solid #1a3a5c;
-    background: #e8f0f8;
+.vt-card:hover, .vt-card:active { border-color: #c8a84b; background: #fff8ec; }
+.vt-card.selected { border-color: #1a3a5c; background: #e8f0f8; border-width: 2px; }
+.vt-name {
+  font-size: clamp(10px, 2.5vw, 12px);
+  font-weight: 600;
+  color: #1a3a5c;
+  margin-bottom: 4px;
+  letter-spacing: .02em;
+  line-height: 1.4;
+}
+.vt-days { font-size: clamp(9px, 2.2vw, 11px); color: #6b5a3a; margin-bottom: 6px; line-height: 1.3; }
+.vt-price { font-size: clamp(16px, 4vw, 20px); font-weight: 600; color: #0d2240; }
+.vt-note { font-size: clamp(8px, 2vw, 10px); color: #8b7a5a; margin-top: 3px; }
+
+/* ===== CASH NOTICE ===== */
+.cash-notice {
+  background: #fff8e8;
+  border: 1px solid #e0a020;
+  padding: 12px 14px;
+  margin-top: 12px;
+  font-size: clamp(11px, 2.8vw, 12px);
+  color: #4a2800;
+  line-height: 1.8;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.cash-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.cash-label {
+  display: block;
+  color: #8b4a00;
+  font-size: clamp(9px, 2.2vw, 11px);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+.cash-en {
+  font-size: clamp(9px, 2.2vw, 11px);
+  color: #7a5030;
+  margin-top: 4px;
+  display: block;
+  font-style: italic;
 }
 
-/* 署名 */
-.sig-container {
-    border: 1px solid #c0b090;
-    background: #fff;
-    margin-top: 5px;
+/* ===== DECLARATION ===== */
+.decl {
+  background: #f4f0e8;
+  border: 1px solid #b0a888;
+  padding: 14px 16px;
+  font-size: clamp(11px, 2.8vw, 12px);
+  line-height: 1.9;
+  color: #2a2a2a;
+  margin-bottom: 14px;
+  font-style: italic;
+}
+
+/* ===== CHECKBOXES ===== */
+.cb-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+.cb-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  margin-top: 3px;
+  accent-color: #1a3a5c;
+  cursor: pointer;
+  padding: 0;
+  border: none;
+}
+.cb-row label {
+  font-size: clamp(11px, 3vw, 13px);
+  color: #1a1a2e;
+  cursor: pointer;
+  font-family: 'EB Garamond', serif;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+
+/* ===== SIGNATURE ===== */
+.sig-wrap {
+  border: 1px solid #c0b090;
+  background: #fffdf8;
+  padding: 8px;
+  margin-top: 4px;
 }
 #sigCanvas {
-    width: 100%;
-    height: 180px;
-    touch-action: none;
-    display: block;
+  display: block;
+  border: 1px dashed #c8a84b;
+  background: #fff;
+  width: 100%;
+  height: 110px;
+  cursor: crosshair;
+  touch-action: none;
+}
+.sig-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 7px;
+  flex-wrap: wrap;
+}
+.btn-clear {
+  background: none;
+  border: 1px solid #c0b090;
+  padding: 5px 14px;
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(10px, 2.5vw, 12px);
+  cursor: pointer;
+  letter-spacing: .05em;
+  color: #4a3a1a;
+  transition: background .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-clear:hover, .btn-clear:active { background: #f0e8d0; }
+.sig-hint {
+  font-size: clamp(9px, 2.5vw, 11px);
+  color: #8b7a5a;
+  letter-spacing: .03em;
 }
 
+/* ===== SUBMIT BUTTON ===== */
 .btn-submit {
-    width: 100%;
-    background: #0d2240;
-    color: #f0e6c8;
-    padding: 20px;
-    font-size: 18px;
-    font-weight: 700;
-    border: none;
-    border-top: 4px solid #c8a84b;
-    cursor: pointer;
-    margin-top: 40px;
+  width: 100%;
+  background: #0d2240;
+  color: #f0e6c8;
+  border: none;
+  padding: clamp(12px, 3.5vw, 16px);
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(13px, 3.5vw, 16px);
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-top: 3px solid #c8a84b;
+  margin-top: 12px;
+  transition: background .2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-submit:hover, .btn-submit:active { background: #1a3a5c; }
+
+/* ===== WATERMARK ===== */
+.watermark {
+  text-align: center;
+  color: #c0b090;
+  font-size: clamp(8px, 2vw, 10px);
+  letter-spacing: .07em;
+  margin: 16px 0 0;
+  opacity: .7;
+  line-height: 1.5;
 }
 
+/* ===== FOOTER ===== */
 .footer {
-    background: #0d2240;
-    color: #6880a0;
-    text-align: center;
-    padding: 50px 20px;
-    font-size: 11px;
+  background: #0d2240;
+  color: #6880a0;
+  text-align: center;
+  font-size: clamp(9px, 2.2vw, 11px);
+  padding: 16px;
+  letter-spacing: .04em;
+  line-height: 1.9;
+  margin-top: 32px;
+  border-top: 3px double #1e3a5c;
+}
+.footer-strong { color: #a0b8d0; letter-spacing: .1em; }
+.footer-copy { color: #4a6080; font-size: clamp(8px, 2vw, 10px); margin-top: 4px; display: block; }
+
+/* ===== MODAL ===== */
+.modal-bg {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(5,15,35,.88);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: #fffdf8;
+  border: 1px solid #c8a84b;
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.modal-hdr {
+  background: #0d2240;
+  padding: 18px 20px;
+  text-align: center;
+  border-bottom: 3px solid #c8a84b;
+  position: sticky;
+  top: 0;
+}
+.modal-stamp { font-size: 44px; display: block; margin-bottom: 6px; }
+.modal-hdr h3 {
+  color: #f0e6c8;
+  font-size: clamp(15px, 4vw, 19px);
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+.modal-ref { color: #c8a84b; font-size: clamp(9px, 2.5vw, 11px); letter-spacing: .14em; margin-top: 4px; }
+.modal-body { padding: 18px 20px; }
+.app-num {
+  background: #eee8d8;
+  border: 1px solid #c8a84b;
+  padding: 10px 14px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+.app-num small { display: block; font-size: clamp(8px, 2.2vw, 10px); letter-spacing: .1em; text-transform: uppercase; color: #8b7a5a; margin-bottom: 2px; }
+.app-num span { font-size: clamp(14px, 4vw, 18px); font-weight: 600; letter-spacing: .1em; color: #0d2240; word-break: break-all; }
+.modal-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.m-card {
+  background: #f4f0e8;
+  border: 1px solid #d0c8b8;
+  padding: 8px 10px;
+  font-size: clamp(10px, 2.5vw, 12px);
+  color: #3a2800;
+  line-height: 1.6;
+}
+.m-card strong {
+  display: block;
+  font-size: clamp(8px, 2vw, 10px);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #8b6914;
+  margin-bottom: 2px;
+}
+.modal-steps { border: 1px solid #c8a84b; overflow: hidden; margin-bottom: 16px; }
+.modal-steps table { width: 100%; border-collapse: collapse; font-size: clamp(10px, 2.8vw, 12px); }
+.modal-steps th { background: #1a3a5c; color: #f0e6c8; padding: 6px 10px; font-size: clamp(8px, 2.2vw, 10px); letter-spacing: .08em; text-transform: uppercase; text-align: left; }
+.modal-steps td { padding: 7px 10px; border-bottom: 1px solid #e0d8c8; color: #1a1a2e; vertical-align: top; }
+.modal-steps tr:last-child td { border-bottom: none; }
+.modal-steps .sn { color: #c8a84b; font-weight: 700; width: 22px; }
+.modal-ftr {
+  background: #f0e8d0;
+  border-top: 1px solid #c8a84b;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.modal-ftr p { font-size: clamp(9px, 2.5vw, 11px); color: #4a3800; line-height: 1.6; flex: 1; min-width: 160px; }
+.btn-modal-close {
+  background: #0d2240;
+  color: #f0e6c8;
+  border: none;
+  padding: 10px 18px;
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(11px, 3vw, 13px);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-top: 2px solid #c8a84b;
+  white-space: nowrap;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-modal-close:hover, .btn-modal-close:active { background: #1a3a5c; }
+
+/* ===== MOBILE OVERRIDES ===== */
+@media (max-width: 520px) {
+  .fgrid { grid-template-columns: 1fr; }
+  .fg.full { grid-column: 1; }
+
+  .visa-type-grid { grid-template-columns: 1fr; gap: 8px; }
+  .vt-card { display: flex; align-items: center; gap: 10px; text-align: left; }
+  .vt-price { font-size: 18px; min-width: 60px; }
+  .vt-days { margin-bottom: 0; }
+
+  .modal-cards { grid-template-columns: 1fr; }
+
+  .hdr-inner { flex-direction: column; gap: 8px; }
+  .hdr-text { text-align: center; }
+
+  .photo-section { gap: 12px; }
 }
 
-/* スマホ表示での微調整 */
-@media (max-width: 650px) {
-    .main-wrapper { max-width: 100%; box-shadow: none; }
-    .wrap { padding: 20px 15px; }
+@media (max-width: 360px) {
+  .pr-step { font-size: 7px; letter-spacing: .02em; }
+  .pr-num { font-size: 13px; }
 }
-
-/* モーダル */
-.modal-bg{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:1000;align-items:center;justify-content:center;padding:15px}
-.modal-bg.open{display:flex}
-.modal{background:#fffdf8;width:100%;max-width:450px;border:1px solid #c8a84b;text-align:center}
 </style>
 </head>
 <body>
 
-<div class="main-wrapper">
-    <div class="hdr">
-        <div style="font-size:60px">🗻</div>
-        <h1 style="font-size:11px;letter-spacing:3px;color:#c8a84b">GOVERNMENT OF SHIZUOKA</h1>
-        <h2>静岡共和国<br><span style="font-size:16px;font-weight:400">Republic of Shizuoka</span></h2>
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-inner">
+    <div class="coat">🗻</div>
+    <div class="hdr-text">
+      <div class="hdr-title-sub">Ministry of Foreign Affairs &amp; Tourism</div>
+      <div class="hdr-title-main">静岡共和国</div>
+      <div class="hdr-title-en">Republic of Shizuoka</div>
+      <div class="hdr-title-portal">Official Electronic Visa Application Portal</div>
     </div>
-
-    <div class="progress">
-        <div class="pr-step active"><span>1</span> Apply</div>
-        <div class="pr-step"><span>2</span> Verify</div>
-        <div class="pr-step"><span>3</span> Pay</div>
-    </div>
-
-    <div class="wrap">
-        <div class="notice">
-            <strong>⚠ 重要 / IMPORTANT</strong><br>
-            画像のように全ての項目を縦並びに配置しました。PCでもスマホでも、このまま縦にスクロールして入力してください。
-        </div>
-
-        <div class="sec-title">§ 1. Personal / 個人情報</div>
-        
-        <div class="fgrid">
-            <div class="fg">
-                <label class="lbl">写真添付 Photo <span class="req">*</span></label>
-                <div class="photo-box" id="photoBox" onclick="document.getElementById('photoInput').click()">
-                    <span id="photoLabel" style="font-size:10px;color:#8b7a5a">UPLOAD</span>
-                    <input type="file" id="photoInput" hidden accept="image/*">
-                </div>
-            </div>
-
-            <div class="fg">
-                <label class="lbl">姓 Family Name <span class="req">*</span></label>
-                <input type="text" placeholder="例: SHIZUOKA">
-            </div>
-
-            <div class="fg">
-                <label class="lbl">名 Given Name <span class="req">*</span></label>
-                <input type="text" placeholder="例: TARO">
-            </div>
-
-            <div class="fg">
-                <label class="lbl">生年月日 Date of Birth <span class="req">*</span></label>
-                <input type="date">
-            </div>
-
-            <div class="fg">
-                <label class="lbl">メールアドレス Email <span class="req">*</span></label>
-                <input type="email" placeholder="example@mail.com">
-            </div>
-        </div>
-
-        <div class="sec-title">§ 2. Passport / パスポート</div>
-        
-        <div class="fgrid">
-            <div class="fg">
-                <label class="lbl">パスポート番号 Passport No. <span class="req">*</span></label>
-                <input type="text" placeholder="AB1234567">
-            </div>
-            <div class="fg">
-                <label class="lbl">有効期限 Expiry Date <span class="req">*</span></label>
-                <input type="date">
-            </div>
-        </div>
-
-        <div class="sec-title">§ 3. Visa / ビザ種別</div>
-        
-        <div class="visa-list">
-            <div class="vt-card selected" onclick="selectVisa(this)">
-                <strong>Single Entry (30日)</strong><br>¥3,800
-            </div>
-            <div class="vt-card" onclick="selectVisa(this)">
-                <strong>Multiple Entry (90日)</strong><br>¥9,500
-            </div>
-        </div>
-
-        <div class="sec-title">§ 4. Signature / 署名</div>
-        
-        <div class="fg">
-            <label class="lbl">ここに署名してください Signature <span class="req">*</span></label>
-            <div class="sig-container">
-                <canvas id="sigCanvas"></canvas>
-            </div>
-            <button onclick="clearSig()" style="margin-top:10px; padding:8px; font-size:11px; cursor:pointer; background:none; border:1px solid #c0b090">✕ 消去 Clear</button>
-        </div>
-
-        <button class="btn-submit" onclick="submitForm()">申請内容を送信する</button>
-    </div>
-
-    <div class="footer">
-        © 2026 Republic of Shizuoka — Official Portal
-    </div>
+  </div>
+  <div class="hdr-divider"></div>
+  <div class="hdr-decree">Established by Presidential Decree No. 1 — Shizuoka eVisa Act 2019 — Form SZ-TV/2026-R</div>
 </div>
 
-<div class="modal-bg" id="modalBg">
-    <div class="modal">
-        <div style="background:#0d2240; color:#f0e6c8; padding:20px; font-weight:700">SUBMITTED</div>
-        <div class="wrap">
-            <p>申請を受け付けました。</p>
-            <h2 id="appNum" style="margin:15px 0; color:#0d2240">---</h2>
-            <button class="btn-submit" style="margin:0" onclick="location.reload()">閉じる</button>
+<div class="ribbon">観光電子ビザ申請システム — Tourist eVisa Application System — Form SZ-TV/2026</div>
+
+<div class="progress">
+  <div class="pr-step active"><span class="pr-num">1</span>Personal Info</div>
+  <div class="pr-step"><span class="pr-num">2</span>Documents</div>
+  <div class="pr-step"><span class="pr-num">3</span>Review</div>
+  <div class="pr-step"><span class="pr-num">4</span>Submit</div>
+</div>
+
+<div class="wrap">
+
+  <div class="notice">
+    <span class="notice-label">⚠ Important Notice — 重要なお知らせ</span>
+    静岡共和国への入国にはすべての外国人に対して有効な観光ビザが必要です。申請は渡航予定日の<strong>最低14営業日前</strong>に完了してください。富士山周辺地域（標高2,500m以上）への立入りには別途「高山帯立入特別許可証（Form SZ-MT/A）」が必要となります。
+  </div>
+
+  <!-- §1 個人情報 -->
+  <div class="sec-title">§ 1 — Personal Information / 個人情報</div>
+
+  <div class="photo-section">
+    <div class="photo-drop-wrap">
+      <label class="photo-drop" for="photoInput" id="photoDrop">
+        <div class="photo-inner" id="photoInner">
+          <span class="photo-icon">📷</span>
+          <span class="photo-txt">タップして<br>アップロード<br>Click / Tap</span>
         </div>
+      </label>
+      <input type="file" id="photoInput" accept="image/*" capture="user">
+      <div class="photo-sizememo">45mm × 35mm</div>
     </div>
+    <ul class="photo-notes">
+      <li>白背景・正面・無帽</li>
+      <li>申請日より6ヶ月以内撮影</li>
+      <li>カラー写真のみ</li>
+      <li>メガネ不可</li>
+      <li>JPG / PNG 最大5MB</li>
+      <li style="color:#c0392b;font-weight:600">申請後の写真変更は不可</li>
+    </ul>
+  </div>
+
+  <div class="fgrid" style="margin-top:14px">
+    <div class="fg">
+      <label class="lbl">姓 Family Name <span class="req">*</span></label>
+      <input type="text" placeholder="YAMADA" autocomplete="family-name">
+    </div>
+    <div class="fg">
+      <label class="lbl">名 Given Name <span class="req">*</span></label>
+      <input type="text" placeholder="TARO" autocomplete="given-name">
+    </div>
+    <div class="fg">
+      <label class="lbl">姓（漢字）Family Name (Kanji)</label>
+      <input type="text" placeholder="山田">
+    </div>
+    <div class="fg">
+      <label class="lbl">名（漢字）Given Name (Kanji)</label>
+      <input type="text" placeholder="太郎">
+    </div>
+    <div class="fg">
+      <label class="lbl">性別 Gender <span class="req">*</span></label>
+      <select>
+        <option value="">— 選択 Select —</option>
+        <option>男性 Male</option>
+        <option>女性 Female</option>
+        <option>その他 Other / Non-binary</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="lbl">生年月日 Date of Birth <span class="req">*</span></label>
+      <input type="date" autocomplete="bday">
+    </div>
+    <div class="fg">
+      <label class="lbl">出生地 Place of Birth <span class="req">*</span></label>
+      <input type="text" placeholder="Tokyo, Japan">
+    </div>
+    <div class="fg">
+      <label class="lbl">国籍 Nationality <span class="req">*</span></label>
+      <select>
+        <option value="">— 選択 Select —</option>
+        <option>日本 Japan</option>
+        <option>アメリカ USA</option>
+        <option>中国 China</option>
+        <option>韓国 South Korea</option>
+        <option>フランス France</option>
+        <option>ドイツ Germany</option>
+        <option>その他 Other</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="lbl">職業 Occupation <span class="req">*</span></label>
+      <input type="text" placeholder="会社員 / Company Employee">
+    </div>
+    <div class="fg">
+      <label class="lbl">雇用者名 Employer Name</label>
+      <input type="text" placeholder="株式会社〇〇 / ABC Corp.">
+    </div>
+    <div class="fg full">
+      <label class="lbl">自国の住所 Home Address <span class="req">*</span></label>
+      <input type="text" placeholder="1-1-1 Shibuya, Shibuya-ku, Tokyo 150-0001, Japan" autocomplete="street-address">
+    </div>
+    <div class="fg">
+      <label class="lbl">電話番号 Phone Number <span class="req">*</span></label>
+      <input type="tel" placeholder="+81 90-XXXX-XXXX" autocomplete="tel">
+    </div>
+    <div class="fg">
+      <label class="lbl">メールアドレス Email <span class="req">*</span></label>
+      <input type="email" placeholder="taro.yamada@email.com" autocomplete="email">
+    </div>
+  </div>
+
+  <!-- §2 パスポート -->
+  <div class="sec-title">§ 2 — Passport Information / パスポート情報</div>
+  <div class="fgrid">
+    <div class="fg">
+      <label class="lbl">パスポート番号 Passport No. <span class="req">*</span></label>
+      <input type="text" placeholder="AB1234567">
+    </div>
+    <div class="fg">
+      <label class="lbl">パスポート番号（確認）Confirm <span class="req">*</span></label>
+      <input type="text" placeholder="AB1234567">
+    </div>
+    <div class="fg">
+      <label class="lbl">発行国 Issuing Country <span class="req">*</span></label>
+      <input type="text" placeholder="Japan">
+    </div>
+    <div class="fg">
+      <label class="lbl">発行機関 Issuing Authority <span class="req">*</span></label>
+      <input type="text" placeholder="Ministry of Foreign Affairs">
+    </div>
+    <div class="fg">
+      <label class="lbl">発行日 Date of Issue <span class="req">*</span></label>
+      <input type="date">
+    </div>
+    <div class="fg">
+      <label class="lbl">有効期限 Expiry Date <span class="req">*</span></label>
+      <input type="date">
+    </div>
+    <div class="fg full">
+      <label class="lbl">MRZ番号（任意）Machine Readable Zone</label>
+      <input type="text" placeholder="P&lt;JPNYAMADA&lt;&lt;TARO&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;" style="font-family:monospace;font-size:12px;letter-spacing:.04em">
+    </div>
+  </div>
+
+  <!-- §3 渡航情報 -->
+  <div class="sec-title">§ 3 — Travel Information / 渡航情報</div>
+  <div class="fgrid">
+    <div class="fg">
+      <label class="lbl">入国予定日 Intended Entry <span class="req">*</span></label>
+      <input type="date">
+    </div>
+    <div class="fg">
+      <label class="lbl">出国予定日 Intended Departure <span class="req">*</span></label>
+      <input type="date">
+    </div>
+    <div class="fg">
+      <label class="lbl">訪問目的 Purpose of Visit <span class="req">*</span></label>
+      <select>
+        <option value="">— 選択 Select —</option>
+        <option>観光 Tourism</option>
+        <option>富士山登山 Mt. Fuji Climbing</option>
+        <option>温泉療養 Onsen / Wellness</option>
+        <option>茶道・文化体験 Tea Culture</option>
+        <option>グルメ Culinary Tourism</option>
+        <option>友人・親族訪問 Visiting Friends/Relatives</option>
+        <option>その他 Other</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label class="lbl">過去の静岡訪問 Previous Visits</label>
+      <select>
+        <option>初めて First visit</option>
+        <option>1〜2回 1–2 times</option>
+        <option>3回以上 3 or more times</option>
+      </select>
+    </div>
+    <div class="fg full">
+      <label class="lbl">滞在先ホテル・住所 Accommodation in Shizuoka <span class="req">*</span></label>
+      <input type="text" placeholder="例：グランドホテル浜松 / Grand Hotel Hamamatsu, 1-1 Ekimae, Naka-ku, Hamamatsu">
+    </div>
+    <div class="fg full">
+      <label class="lbl">訪問予定地 Planned Areas of Visit</label>
+      <select>
+        <option value="">— 選択 Select —</option>
+        <option>静岡市 Shizuoka City</option>
+        <option>浜松市 Hamamatsu City</option>
+        <option>富士山・富士宮 Mt. Fuji / Fujinomiya</option>
+        <option>伊豆半島 Izu Peninsula</option>
+        <option>熱海 Atami</option>
+        <option>全域 All areas</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- §4 ビザ種別 -->
+  <div class="sec-title">§ 4 — Visa Type &amp; Fee / ビザ種別・手数料</div>
+
+  <div class="visa-type-grid" id="vtGrid">
+    <div class="vt-card selected" data-price="3800" data-type="単次観光ビザ" onclick="selectVisa(this)">
+      <div>
+        <div class="vt-name">単次入国<br>Single Entry</div>
+        <div class="vt-days">最大30日 / Up to 30 days</div>
+      </div>
+      <div>
+        <div class="vt-price">¥3,800</div>
+        <div class="vt-note">入国時現金払い</div>
+      </div>
+    </div>
+    <div class="vt-card" data-price="9500" data-type="複数回観光ビザ" onclick="selectVisa(this)">
+      <div>
+        <div class="vt-name">複数回入国<br>Multiple Entry</div>
+        <div class="vt-days">最大90日 / Up to 90 days</div>
+      </div>
+      <div>
+        <div class="vt-price">¥9,500</div>
+        <div class="vt-note">入国時現金払い</div>
+      </div>
+    </div>
+    <div class="vt-card" data-price="6200" data-type="富士登山特別許可付き観光ビザ" onclick="selectVisa(this)">
+      <div>
+        <div class="vt-name">富士登山許可付<br>+ Fuji Permit</div>
+        <div class="vt-days">最大15日 / Up to 15 days</div>
+      </div>
+      <div>
+        <div class="vt-price">¥6,200</div>
+        <div class="vt-note">入国時現金払い</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cash-notice">
+    <div class="cash-icon">💴</div>
+    <div>
+      <span class="cash-label">💴 ビザ手数料の支払い方法 — Payment of Visa Fee</span>
+      ビザ手数料は<strong>入国審査時に現金（日本円）にてお支払いいただきます。</strong>事前の振込・カード払いは受け付けておりません。入国ゲートの窓口担当官に直接お支払いください。釣り銭が出ない場合がありますので、<strong>必ず小銭をご準備ください。</strong>
+      <span class="cash-en">Visa fees are collected in Japanese Yen (JPY) cash at the border inspection counter upon arrival. No advance payment accepted. Please prepare exact change. Receipt is provided verbally.</span>
+    </div>
+  </div>
+
+  <!-- §5 宣誓書・署名 -->
+  <div class="sec-title">§ 5 — Declaration &amp; Signature / 宣誓書・署名</div>
+
+  <div class="decl">
+    私は、この申請書に記載した情報がすべて真実かつ正確であることを誓います。虚偽の申告がある場合、本申請は無効となり静岡共和国への入国を永久に禁止される場合があります。また、静岡共和国の法律・規則を遵守することを誓います。<br><br>
+    <em>I solemnly declare that all information provided herein is true, complete and accurate. Any false declaration may result in rejection of this application and permanent prohibition of entry into the Republic of Shizuoka.</em>
+  </div>
+
+  <div class="cb-row">
+    <input type="checkbox" id="c1">
+    <label for="c1">上記宣誓書の内容を理解し、同意します。I agree to and understand the declaration above.</label>
+  </div>
+  <div class="cb-row">
+    <input type="checkbox" id="c2">
+    <label for="c2">静岡共和国の入国規則・観光ガイドラインを遵守することに同意します。I agree to comply with all entry regulations of the Republic of Shizuoka.</label>
+  </div>
+  <div class="cb-row">
+    <input type="checkbox" id="c3">
+    <label for="c3">個人情報の取り扱い方針（Privacy Policy）に同意します。I consent to the processing of my personal data per Shizuoka Privacy Act §12.</label>
+  </div>
+  <div class="cb-row">
+    <input type="checkbox" id="c4">
+    <label for="c4">🍵 滞在中に静岡産のお茶を少なくとも1杯飲むことを厳粋に誓います。I solemnly swear to consume at least one cup of authentic Shizuoka green tea during my stay.</label>
+  </div>
+
+  <div class="fg" style="margin-top:16px">
+    <label class="lbl">署名 Applicant's Signature <span class="req">*</span></label>
+    <div class="sig-wrap">
+      <canvas id="sigCanvas"></canvas>
+      <div class="sig-controls">
+        <button class="btn-clear" onclick="clearSig()">✕ クリア Clear</button>
+        <span class="sig-hint">マウスまたはタッチでご署名ください — Sign with mouse or touch</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="watermark">
+    Republic of Shizuoka — eVisa Application System v4.2<br>
+    Secure SSL Encrypted — Form SZ-TV/2026-R
+  </div>
+
+  <button class="btn-submit" onclick="submitForm()">申請を提出する — Submit Application →</button>
+
+</div><!-- /wrap -->
+
+<div class="footer">
+  <div class="footer-strong">静岡共和国 外務観光省 / Ministry of Foreign Affairs &amp; Tourism</div>
+  〒420-8601 静岡県静岡市葵区追手町9番地6号 / Otemachi 9-6, Aoi-ku, Shizuoka City 420-8601<br>
+  Tel: 054-000-0000 | Fax: 054-000-0001 | evisa@mofa.shizuoka.gov.sz<br>
+  受付時間: 平日 9:00–17:00（静岡共和国標準時 JST +9:00）
+  <span class="footer-copy">© 2026 Republic of Shizuoka. All rights reserved. Unauthorized duplication of this form is a violation of Shizuoka Administrative Code §44.</span>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="modal-hdr">
+      <span class="modal-stamp">🗻</span>
+      <h3>申請受理完了<br><span style="font-size:.75em;font-weight:400;letter-spacing:.05em">Application Successfully Received</span></h3>
+      <div class="modal-ref" id="mRef">Reference No. SZ-2026-TV-XXXXXX</div>
+    </div>
+    <div class="modal-body">
+      <div class="app-num">
+        <small>申請受理番号 Application Reference Number</small>
+        <span id="appNum">SZ-2026-TV-000000</span>
+      </div>
+      <div class="modal-cards">
+        <div class="m-card">
+          <strong>ビザ種別 Visa Type</strong>
+          <span id="mVtype">単次観光ビザ</span>
+        </div>
+        <div class="m-card">
+          <strong>手数料 Fee on Arrival</strong>
+          <span id="mFee">¥3,800（現金）</span>
+        </div>
+        <div class="m-card">
+          <strong>審査期間 Processing</strong>
+          5〜7営業日
+        </div>
+      </div>
+      <div class="modal-steps">
+        <table>
+          <tr><th colspan="2">今後の手続き — Next Steps</th></tr>
+          <tr><td class="sn">①</td><td>審査結果はご登録メールアドレスに送付されます。Results will be emailed within 5–7 business days.</td></tr>
+          <tr><td class="sn">②</td><td>承認通知書（eVisa）をプリントアウトして入国時にご提示ください。Print the eVisa approval letter and present at the border.</td></tr>
+          <tr><td class="sn">③</td><td>入国審査窓口にて<strong>現金（日本円）</strong>でビザ手数料をお支払いください。Pay visa fee in cash (JPY) at the border counter upon arrival.</td></tr>
+          <tr><td class="sn">④</td><td>🍵 静岡茶をお楽しみください。Enjoy your Shizuoka green tea.</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="modal-ftr">
+      <p>このページを印刷または保存してください。申請番号は問い合わせ時に必要です。<br><em>Please save or print this confirmation for your records.</em></p>
+      <button class="btn-modal-close" onclick="document.getElementById('modalBg').classList.remove('open')">閉じる Close</button>
+    </div>
+  </div>
 </div>
 
 <script>
-function selectVisa(el){
-    document.querySelectorAll('.vt-card').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
+/* ===== ビザ選択 ===== */
+var selPrice = 3800, selType = '単次観光ビザ';
+function selectVisa(el) {
+  document.querySelectorAll('.vt-card').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  selPrice = parseInt(el.getAttribute('data-price'));
+  selType  = el.getAttribute('data-type');
 }
 
-const canvas = document.getElementById('sigCanvas');
-const ctx = canvas.getContext('2d');
-let drawing = false;
+/* ===== 写真アップロード ===== */
+var photoInput = document.getElementById('photoInput');
+var photoDrop  = document.getElementById('photoDrop');
+var photoInner = document.getElementById('photoInner');
 
-function initCanvas() {
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = '#000';
-}
-window.addEventListener('load', initCanvas);
-window.addEventListener('resize', initCanvas);
-
-function getPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const cx = e.touches ? e.touches[0].clientX : e.clientX;
-    const cy = e.touches ? e.touches[0].clientY : e.clientY;
-    return { x: cx - rect.left, y: cy - rect.top };
-}
-
-canvas.addEventListener('mousedown', (e) => { drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); });
-canvas.addEventListener('mousemove', (e) => { if(!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
-window.addEventListener('mouseup', () => drawing = false);
-
-canvas.addEventListener('touchstart', (e) => { e.preventDefault(); drawing = true; ctx.beginPath(); const p = getPos(e); ctx.moveTo(p.x, p.y); }, {passive:false});
-canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if(!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }, {passive:false});
-
-function clearSig() { ctx.clearRect(0,0,canvas.width,canvas.height); }
-
-document.getElementById('photoInput').addEventListener('change', function(e){
-    const file = e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-        document.getElementById('photoBox').innerHTML = `<img src="${ev.target.result}">`;
-    };
-    reader.readAsDataURL(file);
+photoInput.addEventListener('change', function(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var img = photoDrop.querySelector('img');
+    if (!img) {
+      img = document.createElement('img');
+      photoDrop.appendChild(img);
+    }
+    img.src = ev.target.result;
+    photoInner.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
 });
 
-function submitForm(){
-    const ref = 'SZ-' + Math.floor(100000 + Math.random() * 900000);
-    document.getElementById('appNum').textContent = ref;
-    document.getElementById('modalBg').classList.add('open');
+/* ===== 署名キャンバス ===== */
+var canvas  = document.getElementById('sigCanvas');
+var ctx     = canvas.getContext('2d');
+var drawing = false;
+
+function initCanvas() {
+  var rect = canvas.getBoundingClientRect();
+  /* 既存の描画内容を保持してリサイズ */
+  var saved = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  canvas.width  = Math.round(rect.width)  || 600;
+  canvas.height = Math.round(rect.height) || 110;
+  ctx.strokeStyle = '#1a1a2e';
+  ctx.lineWidth   = 1.8;
+  ctx.lineCap     = 'round';
+  ctx.lineJoin    = 'round';
+  try { ctx.putImageData(saved, 0, 0); } catch(e) {}
+}
+
+window.addEventListener('load',   initCanvas);
+window.addEventListener('resize', function() { setTimeout(initCanvas, 100); });
+
+function getPos(e) {
+  var rect = canvas.getBoundingClientRect();
+  var src  = e.touches ? e.touches[0] : e;
+  return {
+    x: (src.clientX - rect.left) * (canvas.width  / rect.width),
+    y: (src.clientY - rect.top)  * (canvas.height / rect.height)
+  };
+}
+
+/* マウス */
+canvas.addEventListener('mousedown', function(e) {
+  drawing = true;
+  var p = getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+});
+canvas.addEventListener('mousemove', function(e) {
+  if (!drawing) return;
+  var p = getPos(e);
+  ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+});
+canvas.addEventListener('mouseup',    function() { drawing = false; });
+canvas.addEventListener('mouseleave', function() { drawing = false; });
+
+/* タッチ（スマホ） */
+canvas.addEventListener('touchstart', function(e) {
+  e.preventDefault();
+  drawing = true;
+  var p = getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+}, { passive: false });
+
+canvas.addEventListener('touchmove', function(e) {
+  e.preventDefault();
+  if (!drawing) return;
+  var p = getPos(e);
+  ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+}, { passive: false });
+
+canvas.addEventListener('touchend', function() { drawing = false; });
+
+function clearSig() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+/* ===== 申請送信 ===== */
+function genRef() {
+  return 'SZ-2026-TV-' + Math.floor(100000 + Math.random() * 900000);
+}
+function submitForm() {
+  var ref = genRef();
+  document.getElementById('appNum').textContent = ref;
+  document.getElementById('mRef').textContent   = 'Reference No. ' + ref;
+  document.getElementById('mVtype').textContent = selType;
+  document.getElementById('mFee').textContent   = '¥' + selPrice.toLocaleString() + '（現金 / Cash on arrival）';
+  document.getElementById('modalBg').classList.add('open');
 }
 </script>
 </body>
