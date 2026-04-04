@@ -125,13 +125,12 @@ input[type=checkbox]{width:15px;height:15px;min-width:15px;margin-top:3px;accent
 
   <div class="photo-section">
     <div>
-      <div class="photo-drop" id="photoDrop" onclick="document.getElementById('photoInput').click()">
+      <div class="photo-drop" id="photoDrop" >
         <div class="overlay-txt" id="photoLabel" style="display:flex;flex-direction:column;align-items:center;gap:4px">
           <span style="font-size:22px">📷</span>
           <span style="font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:#8b7a5a">Click to<br>Upload<br>写真添付</span>
         </div>
-      </div>
-      <input type="file" id="photoInput" accept="image/*">
+      </label>
       <div style="font-size:10px;color:#8b7a5a;text-align:center;margin-top:4px;letter-spacing:.03em">45mm × 35mm</div>
     </div>
     <ul class="photo-info">
@@ -416,27 +415,65 @@ function selectVisa(el){
   selectedType = el.getAttribute('data-type');
 }
 
+
 var sigCanvas = document.getElementById('sigCanvas');
-sigCanvas.width = sigCanvas.offsetWidth || 640;
 var ctx = sigCanvas.getContext('2d');
 var drawing = false;
 
-function getPos(e){
-  var r = sigCanvas.getBoundingClientRect();
-  var src = e.touches ? e.touches[0] : e;
-  return {
-    x: (src.clientX - r.left) * (sigCanvas.width / r.width),
-    y: (src.clientY - r.top) * (sigCanvas.height / r.height)
-  };
+function resizeCanvas(){
+  const rect = sigCanvas.getBoundingClientRect();
+  sigCanvas.width = rect.width;
+  sigCanvas.height = rect.height;
 }
-sigCanvas.addEventListener('mousedown', function(e){drawing=true;var p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)});
-sigCanvas.addEventListener('mousemove', function(e){if(!drawing)return;var p=getPos(e);ctx.lineTo(p.x,p.y);ctx.strokeStyle='#1a1a2e';ctx.lineWidth=1.5;ctx.lineCap='round';ctx.stroke()});
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function getPos(e){
+  var rect = sigCanvas.getBoundingClientRect();
+  var x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  var y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+  return {x, y};
+}
+
+sigCanvas.addEventListener('mousedown', function(e){
+  drawing = true;
+  var p = getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+});
+
+sigCanvas.addEventListener('mousemove', function(e){
+  if(!drawing) return;
+  var p = getPos(e);
+  ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+});
+
 sigCanvas.addEventListener('mouseup', function(){drawing=false});
 sigCanvas.addEventListener('mouseleave', function(){drawing=false});
-sigCanvas.addEventListener('touchstart', function(e){e.preventDefault();drawing=true;var p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)},{passive:false});
-sigCanvas.addEventListener('touchmove', function(e){e.preventDefault();if(!drawing)return;var p=getPos(e);ctx.lineTo(p.x,p.y);ctx.strokeStyle='#1a1a2e';ctx.lineWidth=1.5;ctx.lineCap='round';ctx.stroke()},{passive:false});
+
+sigCanvas.addEventListener('touchstart', function(e){
+  e.preventDefault();
+  drawing = true;
+  var p = getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+},{passive:false});
+
+sigCanvas.addEventListener('touchmove', function(e){
+  e.preventDefault();
+  if(!drawing) return;
+  var p = getPos(e);
+  ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+},{passive:false});
+
 sigCanvas.addEventListener('touchend', function(){drawing=false});
-function clearSig(){ctx.clearRect(0,0,sigCanvas.width,sigCanvas.height)}
+
+function clearSig(){
+  ctx.clearRect(0,0,sigCanvas.width,sigCanvas.height);
+}
+
 
 var photoInput = document.getElementById('photoInput');
 var photoDrop = document.getElementById('photoDrop');
